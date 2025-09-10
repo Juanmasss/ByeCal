@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>ByeCal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylecalc.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='ByeCal.ico') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Calcula tu IMC</h1>
+        <form method="POST">
+            <label for="altura">Altura (m):</label>
+            <input type="text" id="altura" name="altura" required>
+            <label for="peso">Peso (kg):</label>
+            <input type="text" id="peso" name="peso" required>
+            <button type="submit">Calcular</button>
+        </form>
+        {% if resultado %}
+        <p>Tu IMC es: {{ resultado.imc }} ({{ resultado.clasificacion }})</p>
+        {% endif %}
+        <a class="link" href="/alimentos">Ingresar alimentos</a>
+        <p></p><a class="link" href="/dashboard">Volver al inicio</a></p>
+        <p><a href="{{ url_for('logout') }}">Cerrar sesión</a></p>
+
+        <!-- Botón lateral -->
+<div class="side-tab" onclick="toggleImage()">
+    📊 Ver ayuda
+</div>
+
+<!-- Imagen oculta -->
+<div id="imc-help" class="side-image">
+    <img src="{{ url_for('static', filename='imagen-imc-pesos.png') }}" alt="IMC Pesos">
+</div>
+
+<script>
+    function toggleImage() {
+        const imgBox = document.getElementById("imc-help");
+        imgBox.style.display = (imgBox.style.display === "block") ? "none" : "block";
+    }
+</script>
+        
+    </div>
+</body>
+</html>

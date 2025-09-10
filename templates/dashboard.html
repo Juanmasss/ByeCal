@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>ByeCal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styleboa.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='ByeCal.ico') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body class="dashboard-body">
+    <div class="dashboard-container">
+        <h2>Bienvenido, {{ username }}</h2>
+        {% if registro %}
+            <p>Tu IMC más reciente es: {{ registro.imc }} ({{ registro.clasificacion }})</p>
+        {% else %}
+            <p>Aún no has calculado tu IMC.</p>
+        {% endif %}
+        <a class="dashboard-button" href="{{ url_for('calculadora') }}">
+            <img src="{{ url_for('static', filename='icon_imc.ico') }}" alt="IMC" class="icon-btn">
+            
+            <p>Calcular/Ver IMC</p>
+        </a>
+        <a class="dashboard-button" href="{{ url_for('alimentos') }}">
+    <img src="{{ url_for('static', filename='icon_food.ico') }}" alt="Alimentos" class="icon-btn">
+    <p>Ingresar alimentos</p>
+</a>
+        <a class="dashboard-button" href="{{ url_for('logout') }}">🔒 Cerrar sesión</a>
+    </div>
+</body>
+</html>

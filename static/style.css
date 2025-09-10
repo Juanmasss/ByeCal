@@ -1,0 +1,83 @@
+/* Fondo general */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Nunito', sans-serif;
+    background-color: #AAFFA8; /* Fondo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Contenedor del login */
+.login-container {
+    background-color: #059900; /* Fondo contenedor */
+    padding: 50px 40px;
+    border-radius: 15px;
+    box-shadow: 0px 6px 15px rgba(0,0,0,0.25);
+    width: 380px;
+    text-align: center;
+
+    /* Centrado del contenido */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Título */
+.login-container h2 {
+    color: #FFFFFF; /* Texto blanco */
+    margin-bottom: 40px;
+    font-size: 40px
+
+}
+
+/* Inputs */
+.login-container input[type="email"],
+.login-container input[type="password"] {
+    width: 90%;
+    max-width: 320px;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 8px;
+    background-color: #AAFFA8; /* Fondo inputs */
+    font-size: 16px;
+    text-align: center;
+}
+
+/* Botón */
+.login-container button {
+    width: 90%;
+    max-width: 320px;
+    padding: 12px;
+    margin-top: 15px;
+    background-color: #E82727; /* Fondo botón */
+    color: #FFFFFF; /* Texto blanco */
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.login-container button:hover {
+    background-color: #c31e1e; /* Versión más oscura al pasar el mouse */
+}
+
+/* Links */
+.login-container p {
+    margin-top: 20px;
+    color: #FFFFFF; /* Texto blanco */
+}
+
+.login-container a {
+    color: #AAFFA8;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.login-container a:hover {
+    text-decoration: underline;
+}

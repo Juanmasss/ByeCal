@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>ByeCal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylehome.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='ByeCal.ico') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="home-container">
+        <img src="{{ url_for('static', filename='ByeCal.ico') }}" alt="Logo ByeCal" class="logo">
+        <h1>Bienvenido a ByeCal</h1>
+        <p>Tu asistente de IMC y nutrición</p>
+        <div class="buttons">
+            <a href="{{ url_for('login') }}" class="btn">Iniciar sesión</a>
+            <a href="{{ url_for('register') }}" class="btn btn-secondary">Crear cuenta</a>
+        </div>
+        <a href="{{ url_for('como_funciona') }}" class="link">¿Cómo funciona?</a>
+    </div>
+</body>
+</html>

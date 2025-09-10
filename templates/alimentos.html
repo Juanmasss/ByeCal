@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>ByeCal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styleali.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='ByeCal.ico') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Buscar alimento</h1>
+        <form method="POST">
+            <label for="nombre">Nombre del alimento:</label>
+            <input type="text" id="nombre" name="nombre" required>
+            <button type="submit">Buscar</button>
+        </form>
+
+        {% if info %}
+        <div class="resultado">
+            <h2>Información Nutricional</h2>
+
+            <!-- Contenedor en flex para info + imagen -->
+            <div class="info-contenedor">
+                <div class="texto">
+                    <ul>
+                        <li><strong>Nombre:</strong> {{ info.nombre }}</li>
+                        <li><strong>Calorías:</strong> {{ info.calorias }} kcal</li>
+                        <li><strong>Proteínas:</strong> {{ info.proteinas }} g</li>
+                        <li><strong>Grasas:</strong> {{ info.grasas }} g</li>
+                        <li><strong>Carbohidratos:</strong> {{ info.carbohidratos }} g</li>
+                    </ul>
+                </div>
+
+                {% if info.imagen %}
+                <div class="imagen">
+                    <img src="{{ info.imagen }}" alt="Imagen {{ info.nombre }}">
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <h2>Historial reciente</h2>
+        <table>
+            <tr>
+                <th>Nombre</th>
+                <th>Calorías</th>
+                <th>Proteínas</th>
+                <th>Grasas</th>
+                <th>Carbohidratos</th>
+            </tr>
+            {% for alimento in historial %}
+            <tr>
+                <td>{{ alimento.nombre }}</td>
+                <td>{{ alimento.calorias }}</td>
+                <td>{{ alimento.proteinas }}</td>
+                <td>{{ alimento.grasas }}</td>
+                <td>{{ alimento.carbohidratos }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <a class="link" href="{{ url_for('calculadora') }}">Volver a calculadora</a>
+        <p></p><a class="link" href="{{ url_for('dashboard') }}">Volver al inicio</a></p>
+    </div>
+</body>
+</html>
