@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>ByeCal — Alimentos consumidos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='ByeCal.ico') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+  <div class="container alimentos-consumidos" style="max-width: 1100px; margin: 40px auto; font-family: 'Nunito', sans-serif;">
+    <header class="page-header" style="margin-bottom: 16px;">
+      <h1 style="margin: 0 0 6px;">Alimentos consumidos</h1>
+      <p class="subtitle" style="margin: 0; opacity: .8;">Aquí verás los alimentos que registres durante el día.</p>
+    </header>
+
+    <div class="card" style="background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.08); padding: 16px;">
+      <div class="table-responsive" style="overflow-x:auto;">
+        <table class="tabla-consumos" style="width:100%; border-collapse:collapse; min-width:760px;">
+          <thead>
+            <tr>
+              <th style="text-align:left; padding:10px; border-bottom:1px solid #e6e6e6;">#</th>
+              <th style="text-align:left; padding:10px; border-bottom:1px solid #e6e6e6;">Fecha</th>
+              <th style="text-align:left; padding:10px; border-bottom:1px solid #e6e6e6;">Alimento</th>
+              <th style="text-align:left; padding:10px; border-bottom:1px solid #e6e6e6;">Porción</th>
+              <th style="text-align:left; padding:10px; border-bottom:1px solid #e6e6e6;">Calorías (kcal)</th>
+              <th style="text-align:left; padding:10px; border-bottom:1px solid #e6e6e6;">Proteínas (g)</th>
+              <th style="text-align:left; padding:10px; border-bottom:1px solid #e6e6e6;">Carbohidratos (g)</th>
+              <th style="text-align:left; padding:10px; border-bottom:1px solid #e6e6e6;">Grasas (g)</th>
+            </tr>
+          </thead>
+            <tbody>
+            {% if consumos and consumos|length > 0 %}
+                {% for c in consumos %}
+                <tr>
+                <td style="padding:10px; border-bottom:1px solid #f0f0f0;">{{ loop.index }}</td>
+                <td style="padding:10px; border-bottom:1px solid #f0f0f0;">
+                    {{ c.fecha_hora.strftime('%Y-%m-%d %H:%M') if c.fecha_hora else '-' }}
+                </td>
+                <td style="padding:10px; border-bottom:1px solid #f0f0f0;">{{ c.nombre }}</td>
+                <td style="padding:10px; border-bottom:1px solid #f0f0f0;">{{ c.porcion or '-' }}</td>
+                <td style="padding:10px; border-bottom:1px solid #f0f0f0;">{{ (c.calorias or 0)|round(0) }}</td>
+                <td style="padding:10px; border-bottom:1px solid #f0f0f0;">{{ (c.proteinas or 0)|round(1) }}</td>
+                <td style="padding:10px; border-bottom:1px solid #f0f0f0;">{{ (c.carbohidratos or 0)|round(1) }}</td>
+                <td style="padding:10px; border-bottom:1px solid #f0f0f0;">{{ (c.grasas or 0)|round(1) }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                <td colspan="8" class="empty" style="padding:14px; text-align:center; opacity:.7;">
+                    No hay registros aún.
+                </td>
+                </tr>
+            {% endif %}
+            </tbody>
+
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

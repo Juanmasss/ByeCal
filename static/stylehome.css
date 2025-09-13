@@ -1,74 +1,168 @@
+:root {
+  --bg-green-light: #d8f5d0;   /* fondo sólido verde claro */
+  --dark-red:       #e53935;   /* mismo rojo del botón "Crear cuenta" */
+  --dark-green:     #2f5c2f;   /* verde oscuro/militar */
+  --btn-green:      #28a745;
+  --btn-green-hover:#218838;
+  --btn-red:        #e53935;
+  --btn-red-hover:  #c62828;
+}
+
+/* Reset / base */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Fondo sólido verde claro */
 body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Nunito', sans-serif;
-    background-color: #AAFFA8;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+  background-color: var(--bg-green-light);
+  min-height: 100vh;
 }
 
-.home-container {
-    background-color: #059900;
-    padding: 40px;
-    border-radius: 20px;
-    text-align: center;
-    box-shadow: 0px 6px 15px rgba(0,0,0,0.25);
-    color: #FFFFFF;
-    width: 90%;
-    max-width: 450px;
+/* Container full height */
+.container-fluid {
+  height: 100vh;
 }
 
+/* Quitar fondos duplicados */
+.row.h-100, .col-md-6 {
+  background: transparent;
+  padding: 0;
+}
+
+/* Columna izquierda: imagen */
+.image-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  /* borde derecho grueso con degradado vertical rojo -> verde oscuro */
+  border-right: 20px solid transparent;
+  border-image: linear-gradient(to bottom, var(--dark-red), var(--dark-green)) 1;
+}
+
+/* Imagen cubriendo todo */
+.image-container img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Columna derecha: contenido */
+.col-md-6.d-flex.flex-column {
+  padding: 3.5rem !important;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Logo */
 .logo {
-    width: 80px;
-    margin-bottom: 20px;
+  width: 90px;
+  height: auto;
+  margin-bottom: 0.75rem;
 }
 
-h1 {
-    margin-bottom: 10px;
-    font-size: 2rem;
+/* Títulos */
+h1.fw-bold {
+  font-size: 2.4rem;
+  margin: 0.25rem 0;
+  color: #222;
+}
+.highlight {
+  color: var(--btn-red);
+}
+.lead.text-muted {
+  color: rgba(0,0,0,0.55) !important;
 }
 
-p {
-    margin-bottom: 20px;
-    font-size: 1.1rem;
+/* Botón principal (verde) */
+.btn-main,
+.btn-main:focus {
+  background-color: var(--btn-green) !important;
+  color: #fff !important;
+  border: none !important;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 12px 16px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.btn-main:hover {
+  background-color: var(--btn-green-hover) !important;
+  transform: translateY(-2px);
 }
 
-.buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 20px;
+/* Botón alterno (rojo) */
+.btn-alt,
+.btn-alt:focus {
+  background-color: var(--btn-red) !important;
+  color: #fff !important;
+  border: none !important;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 12px 16px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.btn-alt:hover {
+  background-color: var(--btn-red-hover) !important;
+  transform: translateY(-2px);
 }
 
-.btn {
-    background-color: #E82727;
-    color: #FFFFFF;
-    padding: 12px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s;
+/* Enlace ¿Cómo funciona? */
+.btn-link {
+  color: #0066cc;
+  font-weight: 500;
+  text-decoration: none;
+}
+.btn-link:hover {
+  color: #004c99;
+  text-decoration: underline;
 }
 
-.btn:hover {
-    background-color: #c41f1f;
-    transform: scale(1.05);
+.como-funciona {
+  font-size: 1.3rem; /* texto más grande */
+  margin-top: 10rem; /* lo bajas más (antes estaba en 3rem) */
+  text-align: center; /* opcional */
+  max-width: 400px;
+}
+.como-funciona h3 {
+  font-weight: bold;
+  margin-bottom: 35rem;
+}
+.como-funciona p {
+  margin: 5rem 0;
 }
 
-.btn-secondary {
-    background-color: #FFFFFF;
-    color: #059900;
+/* Responsive: ocultar imagen en móviles */
+@media (max-width: 767.98px) {
+  .image-container { display: none; }
+  .col-md-6.d-flex.flex-column {
+    padding: 2rem !important;
+  }
+  .how-it-works {
+    text-align: center;
+  }
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 10px 0;
+  background-color: transparent; /* puedes cambiar a verde claro o blanco si quieres */
+  color: #333;
+  font-size: 0.9rem;
 }
 
-.btn-secondary:hover {
-    background-color: #DDDDDD;
+.footer i {
+  margin-right: 8px;
+  color: #d62976; /* color del logo de Instagram */
 }
 
-.link {
-    display: inline-block;
-    margin-top: 10px;
-    color: #FFFFFF;
-    text-decoration: underline;
+.footer p {
+  margin: 0;
 }

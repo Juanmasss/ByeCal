@@ -57,6 +57,22 @@ class Alimento(db.Model):
     grasas = db.Column(db.Float)
     carbohidratos = db.Column(db.Float)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+class Consumo(db.Model):
+    __tablename__ = "consumo"
+
+    id = db.Column(db.Integer, primary_key=True)
+    fecha_hora = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    porcion = db.Column(db.String(50), nullable=True, default="100 g")
+
+    # Snapshot de los datos del alimento en el momento del consumo
+    nombre = db.Column(db.String(100), nullable=False)
+    calorias = db.Column(db.Float)
+    proteinas = db.Column(db.Float)
+    grasas = db.Column(db.Float)
+    carbohidratos = db.Column(db.Float)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 # =========================
 # Helpers
@@ -227,6 +243,42 @@ def alimentos():
     historial = Alimento.query.filter_by(user_id=session['user_id']).order_by(Alimento.id.desc()).limit(10).all()
     return render_template('alimentos.html', info=info, historial=historial)
 
+# --- NUEVA RUTA: Alimentos consumidos (debe ir ANTES del main) ---
+@app.route('/alimentos-consumidos', methods=['GET'])
+@login_required
+def agregar_alimentos():
+    consumos = Consumo.query.filter_by(user_id=session['user_id']) \
+                            .order_by(Consumo.fecha_hora.desc()).all()
+    return render_template('agregar_alimentos.html', consumos=consumos)
+# --- RUTA PARA AGREGAR UN CONSUMO DESDE EL BOTÓN ROJO ---
+@app.route('/consumos/agregar', methods=['POST'])
+@login_required
+def agregar_consumo():
+    alimento_id = request.form.get('alimento_id', type=int)
+    porcion = request.form.get('porcion') or '100 g'
+
+    if not alimento_id:
+        return redirect(url_for('alimentos'))
+
+    alimento = Alimento.query.filter_by(id=alimento_id, user_id=session['user_id']).first()
+    if not alimento:
+        return redirect(url_for('alimentos'))
+
+    c = Consumo(
+        nombre=alimento.nombre,
+        calorias=alimento.calorias,
+        proteinas=alimento.proteinas,
+        grasas=alimento.grasas,
+        carbohidratos=alimento.carbohidratos,
+        porcion=porcion,
+        user_id=session['user_id'],
+        fecha_hora=datetime.utcnow()
+    )
+    db.session.add(c)
+    db.session.commit()
+
+    return redirect(url_for('agregar_alimentos'))
+
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -247,3 +299,5 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
+    
+
