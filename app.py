@@ -106,10 +106,6 @@ def login_required(view_func):
 def home():
     return render_template('home.html')
 
-@app.route('/como-funciona')
-def como_funciona():
-    return render_template('como_funciona.html')
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     # Espera inputs: name="correo", name="password"
@@ -206,8 +202,11 @@ def alimentos():
         nombre = request.form.get('nombre', '').strip()
         if nombre:
             try:
-                url = f"https://world.openfoodfacts.org/cgi/search.pl?search_terms={nombre}&search_simple=1&json=1"
-                response = requests.get(url, timeout=15)
+                response = requests.get(
+                    "https://world.openfoodfacts.org/cgi/search.pl",
+                    params={"search_terms": nombre, "search_simple": 1, "json": 1},
+                    timeout=15
+                )
                 data = response.json() if response.ok else {}
                 if data.get('products'):
                     producto = data['products'][0]
