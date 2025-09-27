@@ -10,7 +10,7 @@
 </head>
 <body class="dashboard-body">
     <div class="dashboard-container">
-        <h2>Bienvenido, {{ username }}</h2>
+        <h2>Bienvenido, {{ user.nombre }}</h2>
         {% if registro %}
             <p>Tu IMC más reciente es: {{ registro.imc }} ({{ registro.clasificacion }})</p>
         {% else %}
@@ -19,7 +19,7 @@
         <a class="dashboard-button" href="{{ url_for('calculadora') }}">
             <img src="{{ url_for('static', filename='icon_imc.ico') }}" alt="IMC" class="icon-btn">
             
-            <p>Calcular/Ver IMC</p>
+            <p>Ver perfil</p>
         </a>
         <a class="dashboard-button" href="{{ url_for('alimentos') }}">
     <img src="{{ url_for('static', filename='icon_food.ico') }}" alt="Alimentos" class="icon-btn">

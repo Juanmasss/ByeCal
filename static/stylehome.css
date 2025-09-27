@@ -23,7 +23,9 @@ body {
 
 /* Container full height */
 .container-fluid {
-  height: 100vh;
+  padding-left: 0 !important;
+  padding-right: 0 !important;  /* o simplemente: padding: 0 !important; */
+
 }
 
 /* Quitar fondos duplicados */
@@ -125,9 +127,9 @@ h1.fw-bold {
 }
 
 .como-funciona {
-  font-size: 1.3rem;
-  margin-top: 10rem;
-  text-align: center;
+  font-size: 1.3rem; /* texto más grande */
+  margin-top: 10rem; /* lo bajas más (antes estaba en 3rem) */
+  text-align: center; /* opcional */
   max-width: 400px;
 }
 .como-funciona h3 {
@@ -135,27 +137,37 @@ h1.fw-bold {
   margin-bottom: 35rem;
 }
 .como-funciona p {
-  margin: 3rem 0;
+  margin: 5rem 0;
 }
 
-/* Footer */
+/* Responsive: ocultar imagen en móviles */
+@media (max-width: 767.98px) {
+  .image-container { display: none; }
+  .col-md-6.d-flex.flex-column {
+    padding: 2rem !important;
+  }
+  .how-it-works {
+    text-align: center;
+  }
+}
 .footer {
   position: absolute;
   bottom: 0;
   width: 100%;
   padding: 10px 0;
-  background-color: transparent;
+  background-color: transparent; /* puedes cambiar a verde claro o blanco si quieres */
   color: #333;
   font-size: 0.9rem;
 }
+
 .footer i {
   margin-right: 8px;
-  color: #d62976;
+  color: #d62976; /* color del logo de Instagram */
 }
+
 .footer p {
   margin: 0;
 }
-
 /* ================= ANIMACIÓN DEL FONDO ================= */
 
 /* Keyframes del gradiente */
@@ -233,6 +245,8 @@ h1.fw-bold {
 .hero-bg {
   position: relative;
   overflow: hidden;
+
+  
 
   background-color: hsla(118, 100%, 30%, 1);
   background-image:

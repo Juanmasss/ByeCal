@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-from datetime import datetime
+from datetime import datetime, date
 import requests
 import os
 
@@ -23,8 +23,9 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(150), nullable=False)
     fecha_nacimiento = db.Column(db.Date, nullable=False)
-    sexo = db.Column(db.String(10), nullable=False)  # "Masculino", "Femenino", etc.
-    objetivo = db.Column(db.String(200), nullable=True)  # Ej: "Subir masa muscular"
+    sexo = db.Column(db.String(10), nullable=False)
+    objetivo = db.Column(db.String(200), nullable=True)
+    actividad = db.Column(db.String(50), nullable=False, default="Sedentario")  # 👈 Nuevo campo
 
     # Autenticación
     correo = db.Column(db.String(150), nullable=False, unique=True)
@@ -33,6 +34,7 @@ class User(db.Model):
     # Relaciones
     registros_imc = db.relationship('RegistroIMC', backref='usuario', lazy=True, cascade="all, delete-orphan")
     alimentos = db.relationship('Alimento', backref='usuario', lazy=True, cascade="all, delete-orphan")
+    consumos = db.relationship('Consumo', backref='usuario', lazy=True, cascade="all, delete-orphan")
 
 
 class RegistroIMC(db.Model):
@@ -58,6 +60,7 @@ class Alimento(db.Model):
     carbohidratos = db.Column(db.Float)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
+
 class Consumo(db.Model):
     __tablename__ = "consumo"
 
@@ -73,6 +76,7 @@ class Consumo(db.Model):
     carbohidratos = db.Column(db.Float)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
 
 # =========================
 # Helpers
@@ -98,6 +102,25 @@ def login_required(view_func):
         return view_func(*args, **kwargs)
     return wrapped
 
+def calcular_calorias(user, edad, peso, altura):
+    # Fórmula Mifflin-St Jeor
+    if user.sexo == "Masculino":
+        tmb = 10 * peso + 6.25 * (altura*100) - 5 * edad + 5
+    else:
+        tmb = 10 * peso + 6.25 * (altura*100) - 5 * edad - 161
+
+    # Supongamos actividad ligera (puedes ajustar con un campo extra si quieres)
+    mantenimiento = tmb * 1.55  
+
+    if user.objetivo == "Ganar peso":
+        return round(mantenimiento + 300)
+    elif user.objetivo == "Perder peso":
+        return round(mantenimiento - 300)
+    else:  # Mantener
+        return round(mantenimiento)
+
+
+
 # =========================
 # Rutas
 # =========================
@@ -106,9 +129,9 @@ def login_required(view_func):
 def home():
     return render_template('home.html')
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # Espera inputs: name="correo", name="password"
     error = None
     if request.method == 'POST':
         correo = request.form.get('correo', '').strip().lower()
@@ -122,10 +145,9 @@ def login():
             error = 'Correo o contraseña incorrectos.'
     return render_template('login.html', error=error)
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    # Espera inputs:
-    # nombre, fecha_nacimiento (YYYY-MM-DD), sexo, objetivo (opcional), correo, password
     error = None
     if request.method == 'POST':
         try:
@@ -133,10 +155,11 @@ def register():
             fecha_nacimiento_str = request.form.get('fecha_nacimiento', '').strip()
             sexo = request.form.get('sexo', '').strip()
             objetivo = request.form.get('objetivo', '').strip() or None
+            actividad = request.form.get('actividad', '').strip()   # 👈 nuevo
             correo = request.form.get('correo', '').strip().lower()
             password = request.form.get('password', '')
 
-            if not all([nombre, fecha_nacimiento_str, sexo, correo, password]):
+            if not all([nombre, fecha_nacimiento_str, sexo, correo, password, actividad]):
                 error = 'Completa todos los campos obligatorios.'
                 return render_template('register.html', error=error)
 
@@ -144,7 +167,6 @@ def register():
                 error = 'Ya existe una cuenta con ese correo.'
                 return render_template('register.html', error=error)
 
-            # Parseo de fecha
             fecha_nacimiento = datetime.strptime(fecha_nacimiento_str, '%Y-%m-%d').date()
 
             hashed = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -153,6 +175,7 @@ def register():
                 fecha_nacimiento=fecha_nacimiento,
                 sexo=sexo,
                 objetivo=objetivo,
+                actividad=actividad,  # 👈 Guardamos
                 correo=correo,
                 password=hashed
             )
@@ -162,37 +185,96 @@ def register():
         except ValueError:
             error = 'Formato de fecha inválido. Usa AAAA-MM-DD.'
         except Exception as e:
-            error = f'Ocurrió un error creando la cuenta{str(e)}'
+            error = f'Ocurrió un error creando la cuenta: {str(e)}'
     return render_template('register.html', error=error)
+
+
 
 @app.route('/calculadora', methods=['GET', 'POST'])
 @login_required
 def calculadora():
+    user = User.query.get(session['user_id'])
     resultado = None
+
+    # 🔹 Calcular edad (para perfil y fórmula)
+    hoy = date.today()
+    edad = hoy.year - user.fecha_nacimiento.year - (
+        (hoy.month, hoy.day) < (user.fecha_nacimiento.month, user.fecha_nacimiento.day)
+    )
+
     if request.method == 'POST':
-        try:
-            altura = float(request.form['altura'])
-            peso = float(request.form['peso'])
-            if altura <= 0:
-                raise ValueError("Altura inválida")
-            imc = round(peso / (altura ** 2), 2)
-            clasificacion = clasificar_imc(imc)
+        if 'altura' in request.form and 'peso' in request.form:
+            try:
+                altura = float(request.form['altura'])
+                peso = float(request.form['peso'])
+                imc = round(peso / (altura ** 2), 2)
 
-            nuevo = RegistroIMC(
-                altura=altura,
-                peso=peso,
-                imc=imc,
-                clasificacion=clasificacion,
-                user_id=session['user_id']
-            )
-            db.session.add(nuevo)
-            db.session.commit()
+                if imc < 18.5:
+                    clasificacion = "Bajo peso"
+                elif 18.5 <= imc < 24.9:
+                    clasificacion = "Normal"
+                elif 25 <= imc < 29.9:
+                    clasificacion = "Sobrepeso"
+                else:
+                    clasificacion = "Obesidad"
 
-            resultado = {'imc': imc, 'clasificacion': clasificacion}
-        except Exception:
-            resultado = {'error': 'Datos inválidos. Revisa altura y peso.'}
+                # 🔹 Fórmula TMB
+                altura_cm = altura * 100
+                if user.sexo.lower() == "masculino":
+                    tmb = 10 * peso + 6.25 * altura_cm - 5 * edad + 5
+                else:
+                    tmb = 10 * peso + 6.25 * altura_cm - 5 * edad - 161
 
-    return render_template('calculadora.html', resultado=resultado)
+                if user.objetivo == "Perder peso":
+                    calorias = round(tmb - 500)
+                elif user.objetivo == "Ganar peso":
+                    calorias = round(tmb + 500)
+                else:
+                    calorias = round(tmb)
+
+                resultado = {"imc": imc, "clasificacion": clasificacion, "calorias": calorias}
+
+                # 🔹 Guardar en la base de datos (IMC + calorías como clasificacion extendida)
+                registro = RegistroIMC(
+                    altura=altura,
+                    peso=peso,
+                    imc=imc,
+                    clasificacion=f"{clasificacion} - {calorias} kcal",
+                    user_id=user.id
+                )
+                db.session.add(registro)
+                db.session.commit()
+
+            except Exception as e:
+                resultado = {"error": f"Error al calcular IMC: {e}"}
+
+        elif 'objetivo' in request.form:
+            nuevo_objetivo = request.form.get('objetivo')
+            if nuevo_objetivo:
+                user.objetivo = nuevo_objetivo
+                db.session.commit()
+
+    else:
+        # 🔹 Si el usuario ya tiene un registro previo, cargarlo
+        ultimo_registro = RegistroIMC.query.filter_by(user_id=user.id).order_by(RegistroIMC.id.desc()).first()
+        if ultimo_registro:
+            try:
+                # Extraer calorías del campo clasificacion si las guardamos ahí
+                clasificacion, calorias_str = ultimo_registro.clasificacion.split(" - ")
+                calorias = calorias_str.replace(" kcal", "")
+                resultado = {
+                    "imc": ultimo_registro.imc,
+                    "clasificacion": clasificacion,
+                    "calorias": calorias
+                }
+            except:
+                resultado = {
+                    "imc": ultimo_registro.imc,
+                    "clasificacion": ultimo_registro.clasificacion,
+                    "calorias": None
+                }
+
+    return render_template('calculadora.html', user=user, resultado=resultado, edad=edad)
 
 @app.route('/alimentos', methods=['GET', 'POST'])
 @login_required
@@ -242,14 +324,15 @@ def alimentos():
     historial = Alimento.query.filter_by(user_id=session['user_id']).order_by(Alimento.id.desc()).limit(10).all()
     return render_template('alimentos.html', info=info, historial=historial)
 
-# --- NUEVA RUTA: Alimentos consumidos (debe ir ANTES del main) ---
+
 @app.route('/alimentos-consumidos', methods=['GET'])
 @login_required
 def agregar_alimentos():
     consumos = Consumo.query.filter_by(user_id=session['user_id']) \
                             .order_by(Consumo.fecha_hora.desc()).all()
     return render_template('agregar_alimentos.html', consumos=consumos)
-# --- RUTA PARA AGREGAR UN CONSUMO DESDE EL BOTÓN ROJO ---
+
+
 @app.route('/consumos/agregar', methods=['POST'])
 @login_required
 def agregar_consumo():
@@ -278,18 +361,20 @@ def agregar_consumo():
 
     return redirect(url_for('agregar_alimentos'))
 
+
 @app.route('/dashboard')
 @login_required
 def dashboard():
     user = User.query.get(session['user_id'])
     registro = RegistroIMC.query.filter_by(user_id=user.id).order_by(RegistroIMC.id.desc()).first()
-    # En la plantilla usarás user.nombre, user.objetivo, etc.
     return render_template('dashboard.html', user=user, registro=registro)
+
 
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
     return redirect(url_for('login'))
+
 
 # =========================
 # Main
@@ -298,5 +383,3 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
-    
-
