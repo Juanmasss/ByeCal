@@ -8,12 +8,14 @@
 </head>
 <body>
     <div class="login-container">
-        <h2>Crear cuenta</h2>
-        <form method="POST">
-            <!-- Nombre -->
-            <input type="text" name="nombre" placeholder="Nombre completo" required>
+    <!-- 🔹 Logo arriba -->
+    <img src="{{ url_for('static', filename='ByeCal.ico') }}" alt="Logo ByeCal" class="logo">
 
-            <!-- Fecha de nacimiento -->
+    <h2>Crear cuenta</h2>
+    <form method="POST">
+        <!-- Nombre -->
+        <input type="text" name="nombre" placeholder="Nombre completo" required>
+        <!-- Fecha de nacimiento -->
             <input type="date" name="fecha_nacimiento" required>
 
             <!-- Sexo -->

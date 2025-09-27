@@ -51,6 +51,7 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  margin-left: -100px; /* desplaza toda la caja hacia la izquierda */
 }
 
 /* Columna derecha: contenido */
@@ -74,9 +75,40 @@ h1.fw-bold {
   margin: 0.25rem 0;
   color: #222;
 }
+/* ====== Animación de color para el texto "ByeCal" ====== */
+/* Fallback por si no hay soporte de background-clip:text */
+/* ====== Animación de color para el texto "ByeCal" ====== */
+/* Fallback por si no hay soporte de background-clip:text */
 .highlight {
-  color: var(--btn-red);
+  color: #FF7A00;
+  font-weight: 800;
 }
+
+/* Texto con degradado animado */
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .highlight {
+    background: linear-gradient(120deg, #FDFC59, #FF7A00, #FDFC59);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;  /* Safari / Chromium */
+            color: transparent;            /* Fallback estándar */
+    animation: brandGradient 8s ease-in-out infinite;
+  }
+}
+
+/* Movimiento suave del degradado (similar al fondo) */
+@keyframes brandGradient {
+  0%   { background-position: 0% 50%;   }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%;   }
+}
+
+/* Respeta reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .highlight { animation: none; }
+}
+
 .lead.text-muted {
   color: rgba(0,0,0,0.55) !important;
 }

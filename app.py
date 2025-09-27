@@ -44,7 +44,8 @@ class RegistroIMC(db.Model):
     altura = db.Column(db.Float, nullable=False)
     peso = db.Column(db.Float, nullable=False)
     imc = db.Column(db.Float, nullable=False)
-    clasificacion = db.Column(db.String(50), nullable=False)
+    clasificacion = db.Column(db.String(50), nullable=False)  # Ej: "Normal", "Sobrepeso"
+    calorias = db.Column(db.Integer, nullable=True)           # 🔹 Nueva columna
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
@@ -102,22 +103,48 @@ def login_required(view_func):
         return view_func(*args, **kwargs)
     return wrapped
 
-def calcular_calorias(user, edad, peso, altura):
-    # Fórmula Mifflin-St Jeor
-    if user.sexo == "Masculino":
-        tmb = 10 * peso + 6.25 * (altura*100) - 5 * edad + 5
+def calcular_calorias(user, edad, peso, altura_m):
+    """
+    Calcula calorías diarias recomendadas con Mifflin-St Jeor,
+    ajustadas por nivel de actividad y objetivo del usuario.
+
+    :param user: instancia User con atributos sexo, actividad, objetivo
+    :param edad: edad en años (int)
+    :param peso: peso en kg (float)
+    :param altura_m: altura en metros (float)
+    :return: calorías recomendadas (int)
+    """
+    # 1) TMB (Mifflin-St Jeor)
+    altura_cm = altura_m * 100
+    sexo = (user.sexo or "").strip().lower()
+    if sexo == "masculino" or sexo == "m":
+        tmb = 10 * peso + 6.25 * altura_cm - 5 * edad + 5
     else:
-        tmb = 10 * peso + 6.25 * (altura*100) - 5 * edad - 161
+        tmb = 10 * peso + 6.25 * altura_cm - 5 * edad - 161
 
-    # Supongamos actividad ligera (puedes ajustar con un campo extra si quieres)
-    mantenimiento = tmb * 1.55  
+    # 2) Factores de actividad (según opciones en register.html)
+    factores = {
+        "sedentario": 1.2,
+        "ligero": 1.375,
+        "moderado": 1.55,
+        "intenso": 1.725,
+        "muy intenso": 1.9
+    }
+    actividad_key = (user.actividad or "sedentario").strip().lower()
+    factor = factores.get(actividad_key, 1.2)
 
-    if user.objetivo == "Ganar peso":
-        return round(mantenimiento + 300)
-    elif user.objetivo == "Perder peso":
-        return round(mantenimiento - 300)
-    else:  # Mantener
-        return round(mantenimiento)
+    mantenimiento = tmb * factor
+
+    # 3) Ajuste por objetivo
+    objetivo = (user.objetivo or "").strip().lower()
+    if objetivo == "ganar peso":
+        objetivo_kcal = round(mantenimiento + 500)
+    elif objetivo == "perder peso":
+        objetivo_kcal = round(mantenimiento - 500)
+    else:  # Mantener peso
+        objetivo_kcal = round(mantenimiento)
+
+    return objetivo_kcal
 
 
 
@@ -209,37 +236,20 @@ def calculadora():
                 peso = float(request.form['peso'])
                 imc = round(peso / (altura ** 2), 2)
 
-                if imc < 18.5:
-                    clasificacion = "Bajo peso"
-                elif 18.5 <= imc < 24.9:
-                    clasificacion = "Normal"
-                elif 25 <= imc < 29.9:
-                    clasificacion = "Sobrepeso"
-                else:
-                    clasificacion = "Obesidad"
+                clasificacion = clasificar_imc(imc)  # usa helper limpio
 
-                # 🔹 Fórmula TMB
-                altura_cm = altura * 100
-                if user.sexo.lower() == "masculino":
-                    tmb = 10 * peso + 6.25 * altura_cm - 5 * edad + 5
-                else:
-                    tmb = 10 * peso + 6.25 * altura_cm - 5 * edad - 161
-
-                if user.objetivo == "Perder peso":
-                    calorias = round(tmb - 500)
-                elif user.objetivo == "Ganar peso":
-                    calorias = round(tmb + 500)
-                else:
-                    calorias = round(tmb)
+                # ✅ Usamos la función unificada (con actividad + objetivo)
+                calorias = calcular_calorias(user, edad, peso, altura)
 
                 resultado = {"imc": imc, "clasificacion": clasificacion, "calorias": calorias}
 
-                # 🔹 Guardar en la base de datos (IMC + calorías como clasificacion extendida)
+                # 🔹 Guardar en la base de datos (ahora sí: IMC y calorías separados)
                 registro = RegistroIMC(
                     altura=altura,
                     peso=peso,
                     imc=imc,
-                    clasificacion=f"{clasificacion} - {calorias} kcal",
+                    clasificacion=clasificacion,   # solo texto limpio
+                    calorias=calorias,             # número entero en su propia columna
                     user_id=user.id
                 )
                 db.session.add(registro)
@@ -258,21 +268,11 @@ def calculadora():
         # 🔹 Si el usuario ya tiene un registro previo, cargarlo
         ultimo_registro = RegistroIMC.query.filter_by(user_id=user.id).order_by(RegistroIMC.id.desc()).first()
         if ultimo_registro:
-            try:
-                # Extraer calorías del campo clasificacion si las guardamos ahí
-                clasificacion, calorias_str = ultimo_registro.clasificacion.split(" - ")
-                calorias = calorias_str.replace(" kcal", "")
-                resultado = {
-                    "imc": ultimo_registro.imc,
-                    "clasificacion": clasificacion,
-                    "calorias": calorias
-                }
-            except:
-                resultado = {
-                    "imc": ultimo_registro.imc,
-                    "clasificacion": ultimo_registro.clasificacion,
-                    "calorias": None
-                }
+            resultado = {
+                "imc": ultimo_registro.imc,
+                "clasificacion": ultimo_registro.clasificacion,
+                "calorias": ultimo_registro.calorias  # ✅ ya no hacemos split
+            }
 
     return render_template('calculadora.html', user=user, resultado=resultado, edad=edad)
 

@@ -9,16 +9,19 @@
 </head>
 <body>
     <div class="login-container">
-        <h2>Iniciar sesión</h2>
-        <form method="POST">
-            <!-- Correo -->
-            <input type="email" name="correo" placeholder="Correo electrónico" required>
-            
-            <!-- Contraseña -->
-            <input type="password" name="password" placeholder="Contraseña" required>
-            
-            <button type="submit">Ingresar</button>
-        </form>
+    <!-- 🔹 Logo arriba -->
+    <img src="{{ url_for('static', filename='ByeCal.ico') }}" alt="Logo ByeCal" class="logo">
+
+    <h2>Iniciar sesión</h2>
+    <form method="POST">
+        <!-- Correo -->
+        <input type="email" name="correo" placeholder="Correo electrónico" required>
+        
+        <!-- Contraseña -->
+        <input type="password" name="password" placeholder="Contraseña" required>
+        
+        <button type="submit">Ingresar</button>
+    </form>
 
         {% if error %}
             <p style="color: red;">{{ error }}</p>
