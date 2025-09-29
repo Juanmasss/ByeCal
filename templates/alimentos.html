@@ -8,14 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body>
-    <!-- Caja verde MÁS GRANDE -->
+    
     <div class="container"
-         style="
-            max-width: 980px;
-            margin: 40px auto;
-            padding: 24px 28px;
-            border-radius: 12px;
-         ">
+         style="max-width: 980px; margin: 40px auto; padding: 24px 28px; border-radius: 12px;">
 
         <h1 style="margin-top:0;">Buscar alimento</h1>
 
@@ -31,7 +26,6 @@
         {% if info %}
         <div class="resultado" style="margin-top: 16px;">
             <h2>Información Nutricional</h2>
-
             <div class="info-contenedor" style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap;">
                 <div class="texto" style="min-width:260px;">
                     <ul>
@@ -42,7 +36,6 @@
                         <li><strong>Carbohidratos:</strong> {{ info.carbohidratos }} g</li>
                     </ul>
                 </div>
-
                 {% if info.imagen %}
                 <div class="imagen" style="flex:0 0 auto;">
                     <img src="{{ info.imagen }}" alt="Imagen {{ info.nombre }}" style="max-height:140px; border-radius:8px;">
@@ -53,55 +46,39 @@
         {% endif %}
 
         <h2 style="margin-top:24px;">Historial reciente</h2>
-
         <div style="overflow-x:auto;">
             <table style="width:100%; border-collapse: collapse; min-width:700px;">
                 <thead>
                     <tr>
-                        <th style="text-align:left; padding:10px; border-bottom:1px solid rgba(255,255,255,.25);">Nombre</th>
-                        <th style="text-align:left; padding:10px; border-bottom:1px solid rgba(255,255,255,.25);">Calorías</th>
-                        <th style="text-align:left; padding:10px; border-bottom:1px solid rgba(255,255,255,.25);">Proteínas</th>
-                        <th style="text-align:left; padding:10px; border-bottom:1px solid rgba(255,255,255,.25);">Grasas</th>
-                        <th style="text-align:left; padding:10px; border-bottom:1px solid rgba(255,255,255,.25);">Carbohidratos</th>
-                        <th style="text-align:left; padding:10px; border-bottom:1px solid rgba(255,255,255,.25); width:1%;">Agregar</th>
+                        <th>Nombre</th>
+                        <th>Calorías</th>
+                        <th>Proteínas</th>
+                        <th>Grasas</th>
+                        <th>Carbohidratos</th>
+                        <th>Agregar</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for alimento in historial %}
                     <tr>
-                        <td style="padding:10px; border-bottom:1px solid rgba(0,0,0,.08);">{{ alimento.nombre }}</td>
-                        <td style="padding:10px; border-bottom:1px solid rgba(0,0,0,.08);">{{ alimento.calorias }}</td>
-                        <td style="padding:10px; border-bottom:1px solid rgba(0,0,0,.08);">{{ alimento.proteinas }}</td>
-                        <td style="padding:10px; border-bottom:1px solid rgba(0,0,0,.08);">{{ alimento.grasas }}</td>
-                        <td style="padding:10px; border-bottom:1px solid rgba(0,0,0,.08);">{{ alimento.carbohidratos }}</td>
-
-                        <!-- Botón rojo CORRECTO dentro de su form -->
-                        <td style="padding:10px; border-bottom:1px solid rgba(0,0,0,.08);">
-                            <form method="POST" action="{{ url_for('agregar_consumo') }}" style="margin:0;">
-                                <input type="hidden" name="alimento_id" value="{{ alimento.id }}">
-                                <button type="submit"
-                                        title="Agregar este alimento"
-                                        style="
-                                            padding:6px 10px;
-                                            border:none;
-                                            border-radius:8px;
-                                            font-size:13px;
-                                            font-weight:700;
-                                            cursor:pointer;
-                                            background:#d32f2f;
-                                            color:#fff;
-                                            box-shadow: 0 2px 6px rgba(0,0,0,.15);
-                                            white-space:nowrap;">
-                                    Agregar alimento
-                                </button>
-                            </form>
+                        <td>{{ alimento.nombre }}</td>
+                        <td>{{ alimento.calorias }}</td>
+                        <td>{{ alimento.proteinas }}</td>
+                        <td>{{ alimento.grasas }}</td>
+                        <td>{{ alimento.carbohidratos }}</td>
+                        <td>
+                            <button class="agregar-btn"
+                                    data-id="{{ alimento.id }}"
+                                    data-nombre="{{ alimento.nombre }}"
+                                    data-calorias="{{ alimento.calorias }}">
+                                Agregar alimento
+                            </button>
                         </td>
                     </tr>
                     {% endfor %}
-
                     {% if historial|length == 0 %}
                     <tr>
-                        <td colspan="6" style="padding:14px; text-align:center; opacity:.8;">Sin registros recientes.</td>
+                        <td colspan="6" style="text-align:center; opacity:.8;">Sin registros recientes.</td>
                     </tr>
                     {% endif %}
                 </tbody>
@@ -115,7 +92,34 @@
             <span style="opacity:.35;"> &nbsp;•&nbsp; </span>
             <a class="link" href="{{ url_for('agregar_alimentos') }}">Ver alimentos consumidos</a>
         </div>
-
     </div>
+
+    <script>
+    document.querySelectorAll(".agregar-btn").forEach(btn => {
+      btn.addEventListener("click", function (event) {
+        event.preventDefault(); // 🚀 evita redirección
+
+        const alimentoId = this.dataset.id;
+
+        fetch("{{ url_for('agregar_consumo') }}", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: `alimento_id=${alimentoId}&porcion=100 g`
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert(`✔ ${data.consumo.nombre} agregado (${data.consumo.porcion})`);
+          } else {
+            alert(data.message || "Error al agregar alimento");
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Hubo un error con el servidor");
+        });
+      });
+    });
+    </script>
 </body>
 </html>

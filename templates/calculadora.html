@@ -1,58 +1,74 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Calculadora IMC</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <title>Perfil - ByeCal</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='stylecalc.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='ByeCal.ico') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
+  <div class="perfil-container">
+    
+    <!-- 🔹 Card del perfil -->
+    <div class="card">
+      <h2>Perfil</h2>
+      <p><strong>Nombre:</strong> {{ user.nombre }}</p>
+      <p><strong>Edad:</strong> {{ edad }} años</p>
+      <p><strong>Sexo:</strong> {{ user.sexo }}</p>
+      <p><strong>Objetivo actual:</strong> {{ user.objetivo }}</p>
+      <p><strong>Nivel de actividad física:</strong> {{ user.actividad }}</p>
 
-        <!-- 🔹 Perfil del usuario -->
-       <div class="perfil">
-    <h2>Perfil</h2>
-    <p><strong>Nombre:</strong> {{ user.nombre }}</p>
-    <p><strong>Edad:</strong> {{ edad }} años</p>
-    <p><strong>Sexo:</strong> {{ user.sexo }}</p>
-    <p><strong>Objetivo actual:</strong> {{ user.objetivo }}</p>
-
-    <!-- 🔹 Formulario para cambiar objetivo -->
-    <form method="POST">
+      <!-- Formulario para cambiar objetivo -->
+      <form method="POST">
         <label for="objetivo">Cambiar objetivo:</label>
         <select name="objetivo" required>
-            <option value="Mantener peso" {% if user.objetivo == "Mantener peso" %}selected{% endif %}>Mantener peso</option>
-            <option value="Ganar peso" {% if user.objetivo == "Ganar peso" %}selected{% endif %}>Ganar peso</option>
-            <option value="Perder peso" {% if user.objetivo == "Perder peso" %}selected{% endif %}>Perder peso</option>
+          <option value="Mantener peso" {% if user.objetivo == "Mantener peso" %}selected{% endif %}>Mantener peso</option>
+          <option value="Ganar peso" {% if user.objetivo == "Ganar peso" %}selected{% endif %}>Ganar peso</option>
+          <option value="Perder peso" {% if user.objetivo == "Perder peso" %}selected{% endif %}>Perder peso</option>
         </select>
-        <button type="submit">Actualizar</button>
-    </form>
-</div>
+        <button type="submit">Actualizar objetivo</button>
+      </form>
 
-        <!-- 🔹 Calculadora IMC (tu código original intacto) -->
-        <div class="calculadora">
-            <h2>Calculadora de IMC</h2>
-            <form method="POST">
-                <input type="number" step="0.01" name="altura" placeholder="Altura en metros" required>
-                <input type="number" step="0.1" name="peso" placeholder="Peso en kg" required>
-                <button type="submit">Calcular</button>
-            </form>
-
-{% if resultado %}
-    {% if resultado.error %}
-        <p style="color: red;">{{ resultado.error }}</p>
-    {% else %}
-        <p>Tu IMC es: {{ resultado.imc }} ({{ resultado.clasificacion }})</p>
-        <p>Calorías recomendadas por día: <strong>{{ resultado.calorias }}</strong></p>
-    {% endif %}
-{% endif %}
-
-<!-- Botón volver -->
-<p>
-    <a href="{{ url_for('dashboard') }}" class="btn-volver">⬅ Volver al inicio</a>
-</p>
-
-
-        </div>
+      <!-- Formulario para cambiar actividad física -->
+      <form method="POST">
+        <label for="actividad">Cambiar nivel de actividad física:</label>
+        <select name="actividad" required>
+          <option value="Sedentario" {% if user.actividad == "Sedentario" %}selected{% endif %}>Sedentario (poco o nada de ejercicio)</option>
+          <option value="Ligero" {% if user.actividad == "Ligero" %}selected{% endif %}>Ligero (ejercicio leve 1-3 días/semana)</option>
+          <option value="Moderado" {% if user.actividad == "Moderado" %}selected{% endif %}>Moderado (ejercicio 3-5 días/semana)</option>
+          <option value="Intenso" {% if user.actividad == "Intenso" %}selected{% endif %}>Intenso (ejercicio 6-7 días/semana)</option>
+          <option value="Muy intenso" {% if user.actividad == "Muy intenso" %}selected{% endif %}>Muy intenso (ejercicio diario o trabajo físico exigente)</option>
+        </select>
+        <button type="submit">Actualizar actividad</button>
+      </form>
     </div>
+
+    <!-- 🔹 Card de la calculadora IMC -->
+    <div class="card">
+      <h2>Calculadora de IMC</h2>
+      <form method="POST">
+        <input type="number" step="0.01" name="altura" placeholder="Altura en metros" required>
+        <input type="number" step="0.1" name="peso" placeholder="Peso en kg" required>
+        <button type="submit">Calcular</button>
+      </form>
+
+      {% if resultado %}
+        {% if resultado.error %}
+          <p style="color: red;">{{ resultado.error }}</p>
+        {% else %}
+          <p>Tu IMC es: {{ resultado.imc }} ({{ resultado.clasificacion }})</p>
+          <p>Calorías recomendadas por día: <strong>{{ resultado.calorias }}</strong></p>
+        {% endif %}
+      {% endif %}
+
+      <!-- Botón volver -->
+      <p>
+        <a href="{{ url_for('dashboard') }}" class="btn-volver">⬅ Volver al inicio</a>
+        <a href="{{ url_for('alimentos') }}" class="btn-volver">🔍 Buscar Alimentos</a>
+      </p>
+    </div>
+
+  </div>
 </body>
 </html>

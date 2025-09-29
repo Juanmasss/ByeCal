@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from datetime import datetime, date
@@ -230,48 +230,57 @@ def calculadora():
     )
 
     if request.method == 'POST':
-        if 'altura' in request.form and 'peso' in request.form:
-            try:
+        try:
+            # ✅ Cambio de peso y altura (calcular IMC y calorías)
+            if 'altura' in request.form and 'peso' in request.form:
                 altura = float(request.form['altura'])
                 peso = float(request.form['peso'])
                 imc = round(peso / (altura ** 2), 2)
 
-                clasificacion = clasificar_imc(imc)  # usa helper limpio
+                clasificacion = clasificar_imc(imc)
 
-                # ✅ Usamos la función unificada (con actividad + objetivo)
+                # ✅ Usamos la función que toma actividad y objetivo
                 calorias = calcular_calorias(user, edad, peso, altura)
 
                 resultado = {"imc": imc, "clasificacion": clasificacion, "calorias": calorias}
 
-                # 🔹 Guardar en la base de datos (ahora sí: IMC y calorías separados)
+                # Guardar en DB
                 registro = RegistroIMC(
                     altura=altura,
                     peso=peso,
                     imc=imc,
-                    clasificacion=clasificacion,   # solo texto limpio
-                    calorias=calorias,             # número entero en su propia columna
+                    clasificacion=clasificacion,
+                    calorias=calorias,
                     user_id=user.id
                 )
                 db.session.add(registro)
                 db.session.commit()
 
-            except Exception as e:
-                resultado = {"error": f"Error al calcular IMC: {e}"}
+            # ✅ Cambio de objetivo
+            elif 'objetivo' in request.form:
+                nuevo_objetivo = request.form.get('objetivo')
+                if nuevo_objetivo:
+                    user.objetivo = nuevo_objetivo
+                    db.session.commit()
 
-        elif 'objetivo' in request.form:
-            nuevo_objetivo = request.form.get('objetivo')
-            if nuevo_objetivo:
-                user.objetivo = nuevo_objetivo
-                db.session.commit()
+            # ✅ Cambio de actividad física
+            elif 'actividad' in request.form:
+                nueva_actividad = request.form.get('actividad')
+                if nueva_actividad:
+                    user.actividad = nueva_actividad
+                    db.session.commit()
+
+        except Exception as e:
+            resultado = {"error": f"Error al calcular IMC: {e}"}
 
     else:
-        # 🔹 Si el usuario ya tiene un registro previo, cargarlo
+        # 🔹 Si ya tiene registros previos
         ultimo_registro = RegistroIMC.query.filter_by(user_id=user.id).order_by(RegistroIMC.id.desc()).first()
         if ultimo_registro:
             resultado = {
                 "imc": ultimo_registro.imc,
                 "clasificacion": ultimo_registro.clasificacion,
-                "calorias": ultimo_registro.calorias  # ✅ ya no hacemos split
+                "calorias": ultimo_registro.calorias
             }
 
     return render_template('calculadora.html', user=user, resultado=resultado, edad=edad)
@@ -324,15 +333,53 @@ def alimentos():
     historial = Alimento.query.filter_by(user_id=session['user_id']).order_by(Alimento.id.desc()).limit(10).all()
     return render_template('alimentos.html', info=info, historial=historial)
 
+@app.route("/eliminar_consumo/<int:consumo_id>", methods=["POST"])
+def eliminar_consumo(consumo_id):
+    consumo = Consumo.query.filter_by(id=consumo_id, user_id=session["user_id"]).first()
+    if not consumo:
+        # Redirige aunque no exista, para no romper la vista
+        return redirect(url_for("agregar_alimentos"))
+
+    db.session.delete(consumo)
+    db.session.commit()
+
+    # Redirige a la página de alimentos consumidos después de eliminar
+    return redirect(url_for("agregar_alimentos"))
 
 @app.route('/alimentos-consumidos', methods=['GET'])
 @login_required
 def agregar_alimentos():
-    consumos = Consumo.query.filter_by(user_id=session['user_id']) \
+    user_id = session['user_id']
+
+    # 🔹 Traer alimentos consumidos del usuario
+    consumos = Consumo.query.filter_by(user_id=user_id) \
                             .order_by(Consumo.fecha_hora.desc()).all()
-    return render_template('agregar_alimentos.html', consumos=consumos)
+
+    # 🔹 Últimas calorías recomendadas (de la calculadora/IMC)
+    calorias_recomendadas = None
+    ultimo_registro = RegistroIMC.query.filter_by(user_id=user_id) \
+                                       .order_by(RegistroIMC.id.desc()).first()
+    if ultimo_registro:
+        calorias_recomendadas = ultimo_registro.calorias
+
+    # 🔹 Calorías consumidas HOY
+    hoy = datetime.utcnow().date()
+    calorias_consumidas = db.session.query(db.func.sum(Consumo.calorias)) \
+        .filter(Consumo.user_id == user_id) \
+        .filter(db.func.date(Consumo.fecha_hora) == hoy) \
+        .scalar() or 0
+
+    return render_template(
+        'agregar_alimentos.html',
+        consumos=consumos,
+        calorias_recomendadas=calorias_recomendadas,
+        calorias_consumidas=calorias_consumidas
+    )
 
 
+# ---------------------------
+# Agregar un nuevo consumo
+# ---------------------------
 @app.route('/consumos/agregar', methods=['POST'])
 @login_required
 def agregar_consumo():
@@ -340,11 +387,11 @@ def agregar_consumo():
     porcion = request.form.get('porcion') or '100 g'
 
     if not alimento_id:
-        return redirect(url_for('alimentos'))
+        return jsonify({"success": False, "message": "No se seleccionó alimento"}), 400
 
     alimento = Alimento.query.filter_by(id=alimento_id, user_id=session['user_id']).first()
     if not alimento:
-        return redirect(url_for('alimentos'))
+        return jsonify({"success": False, "message": "Alimento no encontrado"}), 404
 
     c = Consumo(
         nombre=alimento.nombre,
@@ -359,7 +406,17 @@ def agregar_consumo():
     db.session.add(c)
     db.session.commit()
 
-    return redirect(url_for('agregar_alimentos'))
+
+    return jsonify({
+        "success": True,
+        "message": f"{alimento.nombre} agregado con éxito",
+        "consumo": {
+            "nombre": alimento.nombre,
+            "calorias": alimento.calorias,
+            "porcion": porcion
+        }
+    })
+
 
 
 @app.route('/dashboard')

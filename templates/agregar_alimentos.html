@@ -15,49 +15,75 @@
       <p class="subtitle" style="margin: 0; opacity: .8;">Aquí verás los alimentos que registres durante el día.</p>
     </header>
 
+    <!-- 🔥 Bloque de calorías -->
+    <div class="card" style="background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.08); padding: 16px; margin-bottom:16px;">
+      <h2 style="margin-top:0;">Calorías</h2>
+      <p><strong>Recomendadas:</strong> {{ calorias_recomendadas }} kcal</p>
+      <p><strong>Consumidas:</strong> <span id="consumidas">{{ calorias_consumidas }}</span> kcal</p>
+    </div>
+
+    <!-- 🔥 Tabla de alimentos consumidos -->
     <div class="card" style="background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.08); padding: 16px;">
       <div class="table-responsive" style="overflow-x:auto;">
         <table class="tabla-consumos" style="width:100%; border-collapse:collapse; min-width:760px;">
           <thead>
             <tr>
-              <th style="text-align:left; padding:10px; border-bottom:1px solid #e6e6e6;">#</th>
-              <th style="text-align:left; padding:10px; border-bottom:1px solid #e6e6e6;">Fecha</th>
-              <th style="text-align:left; padding:10px; border-bottom:1px solid #e6e6e6;">Alimento</th>
-              <th style="text-align:left; padding:10px; border-bottom:1px solid #e6e6e6;">Porción</th>
-              <th style="text-align:left; padding:10px; border-bottom:1px solid #e6e6e6;">Calorías (kcal)</th>
-              <th style="text-align:left; padding:10px; border-bottom:1px solid #e6e6e6;">Proteínas (g)</th>
-              <th style="text-align:left; padding:10px; border-bottom:1px solid #e6e6e6;">Carbohidratos (g)</th>
-              <th style="text-align:left; padding:10px; border-bottom:1px solid #e6e6e6;">Grasas (g)</th>
+              <th>#</th>
+              <th>Fecha</th>
+              <th>Alimento</th>
+              <th>Porción</th>
+              <th>Calorías (kcal)</th>
+              <th>Proteínas (g)</th>
+              <th>Carbohidratos (g)</th>
+              <th>Grasas (g)</th>
+              <th>Acciones</th> <!-- Nueva columna -->
             </tr>
           </thead>
-            <tbody>
+          <tbody>
             {% if consumos and consumos|length > 0 %}
                 {% for c in consumos %}
                 <tr>
-                <td style="padding:10px; border-bottom:1px solid #f0f0f0;">{{ loop.index }}</td>
-                <td style="padding:10px; border-bottom:1px solid #f0f0f0;">
-                    {{ c.fecha_hora.strftime('%Y-%m-%d %H:%M') if c.fecha_hora else '-' }}
-                </td>
-                <td style="padding:10px; border-bottom:1px solid #f0f0f0;">{{ c.nombre }}</td>
-                <td style="padding:10px; border-bottom:1px solid #f0f0f0;">{{ c.porcion or '-' }}</td>
-                <td style="padding:10px; border-bottom:1px solid #f0f0f0;">{{ (c.calorias or 0)|round(0) }}</td>
-                <td style="padding:10px; border-bottom:1px solid #f0f0f0;">{{ (c.proteinas or 0)|round(1) }}</td>
-                <td style="padding:10px; border-bottom:1px solid #f0f0f0;">{{ (c.carbohidratos or 0)|round(1) }}</td>
-                <td style="padding:10px; border-bottom:1px solid #f0f0f0;">{{ (c.grasas or 0)|round(1) }}</td>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ c.fecha_hora.strftime('%Y-%m-%d %H:%M') if c.fecha_hora else '-' }}</td>
+                  <td>{{ c.nombre }}</td>
+                  <td>{{ c.porcion or '-' }}</td>
+                  <td>{{ (c.calorias or 0)|round(0) }}</td>
+                  <td>{{ (c.proteinas or 0)|round(1) }}</td>
+                  <td>{{ (c.carbohidratos or 0)|round(1) }}</td>
+                  <td>{{ (c.grasas or 0)|round(1) }}</td>
+                  <td>
+                    <form method="POST" action="{{ url_for('eliminar_consumo', consumo_id=c.id) }}" style="display:inline;">
+                      <button type="submit" style="background:#e53935; color:#fff; border:none; padding:6px 10px; border-radius:6px; cursor:pointer;">
+                        ❌ Eliminar
+                      </button>
+                    </form>
+                  </td>
                 </tr>
                 {% endfor %}
             {% else %}
                 <tr>
-                <td colspan="8" class="empty" style="padding:14px; text-align:center; opacity:.7;">
+                  <td colspan="9" class="empty" style="padding:14px; text-align:center; opacity:.7;">
                     No hay registros aún.
-                </td>
+                  </td>
                 </tr>
             {% endif %}
-            </tbody>
-
+          </tbody>
         </table>
       </div>
     </div>
+
+    <!-- 🔥 Botones de navegación -->
+    <div style="margin-top: 24px; text-align:center;">
+      <a href="{{ url_for('alimentos') }}" 
+         style="display:inline-block; margin:8px; padding:10px 18px; background:#2196F3; color:#fff; text-decoration:none; border-radius:8px;">
+         ⬅ Volver a alimentos
+      </a>
+      <a href="{{ url_for('dashboard') }}" 
+         style="display:inline-block; margin:8px; padding:10px 18px; background:#4CAF50; color:#fff; text-decoration:none; border-radius:8px;">
+         🏠 Volver al inicio
+      </a>
+    </div>
+
   </div>
 </body>
 </html>

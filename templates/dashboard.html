@@ -10,14 +10,23 @@
 </head>
 <body class="dashboard-body">
     <div class="dashboard-container">
-        <h2>Bienvenido, {{ user.nombre }}</h2>
+        <h2>
+  {% if user.sexo.lower() == "femenino" %}
+    Bienvenida, {{ user.nombre }}
+  {% elif user.sexo.lower() == "masculino" %}
+    Bienvenido, {{ user.nombre }}
+  {% else %}
+    Bienvenide, {{ user.nombre }}
+  {% endif %}
+</h2>
         {% if registro %}
             <p>Tu IMC más reciente es: {{ registro.imc }} ({{ registro.clasificacion }})</p>
         {% else %}
             <p>Aún no has calculado tu IMC.</p>
         {% endif %}
         <a class="dashboard-button" href="{{ url_for('calculadora') }}">
-            <img src="{{ url_for('static', filename='icon_imc.ico') }}" alt="IMC" class="icon-btn">
+           <img src="{{ url_for('static', filename='boton_perfil_byecal.ico') }}" alt="IMC" class="icon-btn">
+
             
             <p>Ver perfil</p>
         </a>
