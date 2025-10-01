@@ -68,15 +68,15 @@
               >
             </div>
 
+            <div class="d-grid gap-3 col-md-8 col-lg-6 mx-auto mt-4 cta-buttons"></div>
+
             <!-- Bloque explicativo -->
-            <div class="como-funciona mt-5">
-              <h3>
-                <p>¿Cómo funciona ByeCal?</p>
-                <p>-📏 Calcula tu IMC con tus datos de peso y altura.</p>
-                <p>-🍽️ Busca alimentos y guarda su información nutricional.</p>
-                <p>-📊 Revisa tu historial y progreso en tu panel personal.</p>
-              </h3>
-            </div>
+            <div class="como-funciona">
+  <h3>¿Cómo funciona ByeCal?</h3>
+  <p>📏 Calcula tu IMC con tus datos de peso y altura.</p>
+  <p>🍽️ Busca alimentos y guarda su información nutricional.</p>
+  <p>📊 Revisa tu historial y progreso en tu panel personal.</p>
+</div>
           </div>
         </div>
       </div>
@@ -84,5 +84,79 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+  const ok=(p,v)=>CSS && CSS.supports && CSS.supports(p,v);
+  const hasNative = ok('animation-timeline','--x') && ok('view-timeline-name','--x');
+
+  // ⚠️ IMPORTANTE: Forzamos el JS para .como-funciona
+  const FORCE_JS_FOR_HOW = true;
+  if (hasNative && !FORCE_JS_FOR_HOW) return;
+
+  const sec = document.querySelector('.como-funciona');
+  if(!sec) return;
+
+  const title = sec.querySelector('h3');
+  const items = Array.from(sec.querySelectorAll('p, li'));
+  if (title) title.style.animation = 'none';
+  items.forEach(el => el.style.animation = 'none');
+
+
+  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+  const ease =(t)=>t*t*(3-2*t);
+  const seg  =(p,s,e)=>clamp((p - s)/(e - s), 0, 1);
+
+  function appear(node, prog){
+    if(!node) return;
+    const e = ease(prog);
+    node.style.transform = `translateY(${32*(1-e)}px)`;
+    node.style.opacity = e.toFixed(3);
+    node.style.willChange = 'transform,opacity';
+  }
+
+function onScroll(){
+  const r  = sec.getBoundingClientRect();
+  const vh = innerHeight || document.documentElement.clientHeight;
+
+  // Progreso más amable (entra antes y completa antes)
+  const p = clamp((vh*0.75 - r.top) / (vh*0.75 + r.height), 0, 1);
+
+  // 👉 SNAP global: si la sección ya está bastante dentro o centrada, TODO a 1
+  const SNAP = (p > 0.85) || (r.top < vh*0.55 && r.bottom > vh*0.45);
+  if (SNAP){
+    // fuerza estado final nítido
+    if (title){ title.style.opacity = 1; title.style.transform = 'translateY(0)'; }
+    items.forEach(el => { el.style.opacity = 1; el.style.transform = 'translateY(0)'; });
+    return; // no calculamos más, ya está “en sitio”
+  }
+
+  // Título con rangos cortos
+  const titleStart = -0.10;
+  const titleEnd   = 0.80;
+  let tProg = seg(p, titleStart, titleEnd);
+  if (tProg > 0.98) tProg = 1;   // mini-snap propio
+  appear(title, tProg);
+
+  // Párrafos (stagger corto + tope)
+  items.forEach((el, i)=>{
+    const startBase = 0.00;
+    const gap       = 0.06;
+    const endBase   = 0.60;
+    const endCap    = 0.95; // subimos tope para que llegue sí o sí
+    let start = startBase + i*gap;
+    let end   = Math.min(endBase + i*gap, endCap);
+    let prog  = seg(p, start, end);
+    if (prog > 0.98) prog = 1;   // mini-snap por ítem
+    appear(el, prog);
+  });
+}
+  
+
+  addEventListener('scroll', onScroll, {passive:true});
+  addEventListener('resize', onScroll);
+  onScroll(); // ← inicializa
+})();
+</script>
+
   </body>
 </html>

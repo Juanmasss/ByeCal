@@ -2,8 +2,8 @@
   --bg-green-light: #d8f5d0;   /* fondo sólido verde claro */
   --dark-red:       #e53935;   /* mismo rojo del botón "Crear cuenta" */
   --dark-green:     #2f5c2f;   /* verde oscuro/militar */
-  --btn-green:      #28a745;
-  --btn-green-hover:#218838;
+  --btn-green:      #e53935;
+  --btn-green-hover:#c62828;
   --btn-red:        #e53935;
   --btn-red-hover:  #c62828;
 }
@@ -168,7 +168,7 @@ h1.fw-bold {
 }
 .como-funciona h3 {
   font-weight: bold;
-  margin-bottom: 35rem;
+  margin-bottom: 2rem;
 }
 .como-funciona p {
   margin: 5rem 0;
@@ -205,33 +205,8 @@ h1.fw-bold {
 /* ================= ANIMACIÓN DEL FONDO ================= */
 
 /* Keyframes del gradiente */
-@keyframes hero-gradient-animation {
-  0% {
-    --c-0: hsla(118.6, 100%, 82%, 1);
-    --y-0: 69%; --x-0: 91%;
-    --c-1: hsla(0, 80%, 52%, 1); --y-1: 20%; --x-1: 92%;
-    --c-2: hsla(118.7, 100%, 81%, 1); --y-2: 81%; --x-2: 2%;
-    --c-3: hsla(45, 83%, 28%, 0.82); --y-3: 67%; --x-3: 97%;
-    --c-4: hsla(0, 80%, 52%, 1); --y-4: 77%; --x-4: 52%;
-    --c-5: hsla(0, 80%, 52%, 1); --y-5: 61%; --x-5: 88%;
-    --c-6: hsla(0, 100%, 47%, 1); --y-6: 46%; --x-6: 8%;
-  }
-  50% {
-    --c-0: hsla(352.7, 98%, 41%, 1); --x-0: 16%;
-    --c-1: hsla(118, 100%, 30%, 1); --y-1: 12%; --x-1: 3%;
-    --c-2: hsla(0, 80%, 52%, 1); --y-2: 61%; --x-2: 73%;
-    --c-3: hsla(0, 80%, 52%, 1); --y-3: 76%; --x-3: 47%;
-    --c-4: hsla(111, 100%, 39%, 1); --y-4: 46%; --x-4: 18%;
-    --c-5: hsla(40, 100%, 30%, 1); --y-5: 102%; --x-5: 42%;
-    --c-6: hsla(45, 100%, 39%, 1); --y-6: 70%; --x-6: 33%;
-  }
-  100% {
-    --c-1: hsla(118, 100%, 30%, 1); --y-1: 4%; --x-1: 41%;
-    --c-2: hsla(124, 67%, 27%, 1); --y-2: 82%; --x-2: 98%;
-    --c-3: hsla(118.7, 100%, 81%, 1); --y-3: 48%; --x-3: 9%;
-    --c-6: hsla(44, 100%, 31%, 1); --y-6: 70%; --x-6: 93%;
-  }
-}
+
+
 /* === Registro de variables para permitir animación === */
 @property --c-0 { syntax: '<color>'; inherits: false; initial-value: hsla(118.6206896552,100%,82%,1) }
 @property --y-0 { syntax: '<percentage>'; inherits: false; initial-value: 69% }
@@ -279,21 +254,10 @@ h1.fw-bold {
 .hero-bg {
   position: relative;
   overflow: hidden;
-
-  
-
-  background-color: hsla(118, 100%, 30%, 1);
-  background-image:
-    radial-gradient(circle at var(--x-0) var(--y-0), var(--c-0) var(--s-start-0), transparent var(--s-end-0)),
-    radial-gradient(circle at var(--x-1) var(--y-1), var(--c-1) var(--s-start-1), transparent var(--s-end-1)),
-    radial-gradient(circle at var(--x-2) var(--y-2), var(--c-2) var(--s-start-2), transparent var(--s-end-2)),
-    radial-gradient(circle at var(--x-3) var(--y-3), var(--c-3) var(--s-start-3), transparent var(--s-end-3)),
-    radial-gradient(circle at var(--x-4) var(--y-4), var(--c-4) var(--s-start-4), transparent var(--s-end-4)),
-    radial-gradient(circle at var(--x-5) var(--y-5), var(--c-5) var(--s-start-5), transparent var(--s-end-5)),
-    radial-gradient(circle at var(--x-6) var(--y-6), var(--c-6) var(--s-start-6), transparent var(--s-end-6));
-  animation: hero-gradient-animation 10s linear infinite alternate;
-  background-blend-mode: normal, normal, normal, normal, normal, normal, normal;
+  background-color: #FAF0D1; /* 👈 beige clarito / crema */
+  padding-left: 0 !important; /* quita colchón verde */
 }
+
 
 /* Elimina cualquier espacio entre columnas */
 .container-fluid > .row.h-100 { --bs-gutter-x: 0 !important; }
@@ -304,15 +268,185 @@ h1.fw-bold {
 
 /* La imagen: corrimiento a la izquierda sin recentrar todo */
 .image-container img {
-  max-width: none !important;                 /* evita que Bootstrap la limite */
-  width: calc(100% + 250px) !important;       /* la ensancha 250px extra */
-  transform: translateX(-250px) !important;   /* la corre 250px a la izquierda */
-  height: 100% !important;
-  object-fit: cover;
+  width: auto !important;   /* 👈 ocupa todo el ancho real del contenedor */
+  height: auto !important;  /* 👈 ocupa todo el alto */
+  object-fit: cover;        /* 👈 recorta para llenar el contenedor */
+  object-position: center;  /* 👈 centra la parte visible de la imagen */
   display: block;
+  margin: 0;
+  transform: none !important; /* 👈 quitamos el corrimiento */
 }
 
 /* La columna derecha: que arranque pegada */
 .hero-bg {
   padding-left: 0 !important;   /* quita colchón verde */
 }  
+
+/* --- Ajustes de layout en el héroe --- */
+.content-wrapper{
+  /* Empuja el contenido hacia abajo para que los BOTONES queden a la vista */
+  padding-top: 200px;
+  padding-bottom: 40px;
+  max-width: 820px;
+  margin-inline: auto;
+}
+
+/* Baja un poco el título ByeCal */
+h1.fw-bold{
+  margin-top: 5rem;
+}
+
+/* Botones centrados y con ancho cómodo */
+.cta-buttons{
+  max-width: 420px;
+  margin: 2rem auto 0;
+}
+
+/* Manda el bloque “¿Cómo funciona…?” más abajo */
+.como-funciona{
+  margin-top: clamp(160px, 30vh, 320px);
+}
+
+/* Logo un poquito más grande */
+.logo{
+  width: 200px; /* antes 90px */
+}
+
+/* ========== ANIMACIÓN TIPO APPLE (solo agrego) ========== */
+
+/* Estados base por si no hay soporte nativo; también suaviza el fallback JS */
+.hero-bg .logo,
+.hero-bg h1.fw-bold,
+.hero-bg .lead.text-muted,
+.hero-bg .btn-main,
+.hero-bg .btn-alt {
+  will-change: transform, opacity;
+  transition: transform .4s ease, opacity .4s ease;
+}
+
+/* Soporte nativo: Scroll-linked animations (Chrome/Edge/Safari nuevos) */
+@supports (animation-timeline: --x) and (view-timeline-name: --x){
+  .hero-bg{
+    view-timeline-name: --hero;
+    view-timeline-axis: block;
+  }
+/* Logo */
+@keyframes rise-fade-logo {
+  0%  { transform: translateY(0)   scale(1);    opacity: 1; }
+  25% { transform: translateY(-20px) scale(1.10); opacity: 1; }
+  /* antes: 45% { ... opacity: 0 }  */
+  70% { transform: translateY(-10px) scale(1.35); opacity: 0; }  /* ← mueve el 45% a 70% */
+  80% { transform: translateY(-30px) scale(1.40); opacity: 0; }
+  100%{ transform: translateY(-40px) scale(1.20); opacity: 0; }
+}
+
+@keyframes rise-fade-title {
+  0%  { transform: translateY(0) scale(1);    opacity: 1; }
+  25% { transform: translateY(-15px) scale(1.09); opacity: 1; }
+  70% { transform: translateY(-8px)  scale(1.28); opacity: 0; }  /* ← 45% → 70% */
+  80% { transform: translateY(-28px) scale(1.32); opacity: 0; }
+  100%{ transform: translateY(-36px) scale(1.18); opacity: 0; }
+}
+
+@keyframes rise-fade-lead {
+  0%  { transform: translateY(0) scale(1);    opacity: 1; }
+  25% { transform: translateY(-10px) scale(1.08); opacity: 1; }
+  70% { transform: translateY(-6px)  scale(1.20); opacity: 0; }  /* ← 45% → 70% */
+  80% { transform: translateY(-22px) scale(1.24); opacity: 0; }
+  100%{ transform: translateY(-28px) scale(1.12); opacity: 0; }
+}
+
+/* Botones – si ya te gusta como están, déjalos; si no, igual: 45% → 70% */
+@keyframes rise-fade-btn{
+  0%  { transform: translateY(0) scale(1);    opacity: 1; }
+  25% { transform: translateY(-20px) scale(1.10); opacity: 1; }
+  70% { transform: translateY(-6px)  scale(1.40); opacity: 0; }  /* ← 45% → 70% */
+  80% { transform: translateY(-20px) scale(1.50); opacity: 0; }
+  100%{ transform: translateY(-24px) scale(1.10); opacity: 0; }
+}
+
+  /* Parallax izquierda (lo que ya tenías, lo dejo igual) */
+  @keyframes side-pan{
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-8px); }
+    100% { transform: translateY(-24px); }
+  }
+
+  /* 👇 Aplico cada animación al elemento correspondiente */
+  .hero-bg .logo{
+    transform-origin: center top;
+    animation: rise-fade-logo 1 both ease-in-out;
+    animation-timeline: --hero;
+    animation-range: entry 0%  exit 70%;
+  }
+  .hero-bg h1.fw-bold{
+    transform-origin: center top;
+    animation: rise-fade-title 1 both ease-in-out;
+    animation-timeline: --hero;
+    animation-range: entry 10% exit 85%;
+  }
+  .hero-bg .lead.text-muted{
+    transform-origin: center top;
+    animation: rise-fade-lead 1 both ease-in-out;
+    animation-timeline: --hero;
+    animation-range: entry 20% exit 90%;
+  }
+  .hero-bg .btn-main,
+  .hero-bg .btn-alt{
+    transform-origin: center top;
+    animation: rise-fade-btn 1 both ease-in-out;
+    animation-timeline: --hero;
+    animation-range: entry 35% exit 100%;
+  }
+
+  .image-container{
+    will-change: transform;
+    animation: side-pan 1 both ease-out;
+    animation-timeline: --hero;
+    animation-range: entry 0% exit 100%;
+  }
+}
+
+/* Respeta accesibilidad */
+@media (prefers-reduced-motion: reduce){
+  .hero-bg .logo,
+  .hero-bg h1.fw-bold,
+  .hero-bg .lead.text-muted,
+  .hero-bg .btn-main,
+  .hero-bg .btn-alt,
+  .image-container{
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Estado inicial (no toca al héroe) */
+.como-funciona h3,
+.como-funciona p,
+.como-funciona li{
+  opacity: 0;
+  transform: translateY(24px);
+  transition: transform .6s ease, opacity .6s ease;
+  will-change: transform, opacity;
+}
+
+/* Más específico: aplica a cada etiqueta cuando se marque visible */
+.como-funciona h3.is-visible,
+.como-funciona p.is-visible,
+.como-funciona li.is-visible{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger por step (lo pone el JS) */
+.como-funciona [data-step]{
+  transition-delay: calc(0.07s * var(--step, 0));
+}
+
+@supports (animation-timeline: --x) and (view-timeline-name: --x){
+  .como-funciona h3,
+  .como-funciona p,
+  .como-funciona li{
+    animation: none !important;
+  }
+}

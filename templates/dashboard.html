@@ -31,10 +31,18 @@
             <p>Ver perfil</p>
         </a>
         <a class="dashboard-button" href="{{ url_for('alimentos') }}">
-    <img src="{{ url_for('static', filename='icon_food.ico') }}" alt="Alimentos" class="icon-btn">
-    <p>Ingresar alimentos</p>
+  <img
+    src="{{ url_for('static', filename='cesta-de-la-compra.gif') }}?v=1"
+    alt="Alimentos"
+    class="icon-btn gif-cesta"
+    loading="lazy"
+  >
+  <p>Ingresar alimentos</p>
 </a>
-        <a class="dashboard-button" href="{{ url_for('logout') }}">🔒 Cerrar sesión</a>
+</a>
+        <a class="dashboard-button logout-button" href="{{ url_for('logout') }}">
+  🔒 Cerrar sesión
+</a>
     </div>
 </body>
 </html>

@@ -1,5 +1,85 @@
-/* ================= VARIABLES NECESARIAS ================= */
-@property --c-0 { syntax: '<color>'; inherits: false; initial-value: hsla(118,100%,82%,1) }
+/* Texto negro en todo el dashboard */
+.dashboard-body {
+  color: #000000; /* antes #FFFFFF */
+}
+
+/* Botones generales del dashboard */
+.dashboard-button {
+  background-color: #ffdbb0;
+  color: #000000; /* texto negro */
+  padding: 0.8rem 1.2rem;
+  margin: 0.5rem;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.dashboard-button:hover {
+  background-color: #FFD5A9;
+  transform: scale(1.05);
+}
+
+.logout-button {
+  background-color: #e53935 !important; /* rojo fijo */
+  color: #ffffff !important;           /* texto blanco */
+  border: none;
+}
+
+.logout-button:hover {
+  background-color: #c62828 !important; /* rojo oscuro al pasar el mouse */
+}   
+
+/* ================= FONDO ANIMADO ================= */
+@keyframes hero-gradient-animation {
+  0% {
+    --c-0: #FFF59D;      /* fondo amarillo */
+    --y-0: 69%; --x-0: 91%;
+    --c-1: #FBC02D;      /* bolita naranja */
+    --y-1: 20%; --x-1: 92%;
+    --c-2: #FFF176;      /* amarillo medio */
+    --y-2: 81%; --x-2: 2%;
+    --c-3: #FFB74D;      /* naranja suave */
+    --y-3: 67%; --x-3: 97%;
+    --c-4: #FFE082;      /* amarillo cálido */
+    --y-4: 77%; --x-4: 52%;
+    --c-5: #FBC02D;      /* naranja más intenso */
+    --y-5: 61%; --x-5: 88%;
+    --c-6: #FFF59D;      /* fondo amarillo */
+    --y-6: 46%; --x-6: 8%;
+  }
+  50% {
+    --c-0: #FFF176; 
+    --x-0: 16%;
+    --c-1: #FFB74D;
+    --y-1: 12%; --x-1: 3%;
+    --c-2: #FFE082; 
+    --y-2: 61%; --x-2: 73%;
+    --c-3: #FBC02D; 
+    --y-3: 76%; --x-3: 47%;
+    --c-4: #FFF59D; 
+    --y-4: 46%; --x-4: 18%;
+    --c-5: #FFB74D; 
+    --y-5: 102%; --x-5: 42%;
+    --c-6: #FFE082; 
+    --y-6: 70%; --x-6: 33%;
+  }
+  100% {
+    --c-0: #FFF59D;
+    --c-1: #FFB74D;
+    --c-2: #FFF176;
+    --c-3: #FFE082;
+    --c-4: #FFE082;
+    --c-5: #FBC02D;
+    --c-6: #FBC02D;
+
+    --y-1: 4%; --x-1: 41%;
+    --y-2: 82%; --x-2: 98%;
+    --y-3: 48%; --x-3: 9%;
+    --y-6: 70%; --x-6: 93%;
+  }
+}
+
+@property --c-0 { syntax: '<color>'; inherits: false; initial-value: #FFF59D } /* amarillo base */
 @property --y-0 { syntax: '<percentage>'; inherits: false; initial-value: 69% }
 @property --x-0 { syntax: '<percentage>'; inherits: false; initial-value: 91% }
 @property --s-start-0 { syntax: '<percentage>'; inherits: false; initial-value: 8% }
@@ -7,82 +87,54 @@
 
 @property --y-1 { syntax: '<percentage>'; inherits: false; initial-value: 20% }
 @property --x-1 { syntax: '<percentage>'; inherits: false; initial-value: 92% }
-@property --c-1 { syntax: '<color>'; inherits: false; initial-value: hsla(0,80%,52%,1) }
+@property --c-1 { syntax: '<color>'; inherits: false; initial-value: #FBC02D } /* naranja */
 @property --s-start-1 { syntax: '<percentage>'; inherits: false; initial-value: 1% }
 @property --s-end-1   { syntax: '<percentage>'; inherits: false; initial-value: 49% }
 
 @property --y-2 { syntax: '<percentage>'; inherits: false; initial-value: 81% }
 @property --x-2 { syntax: '<percentage>'; inherits: false; initial-value: 2% }
-@property --c-2 { syntax: '<color>'; inherits: false; initial-value: hsla(118,100%,81%,1) }
+@property --c-2 { syntax: '<color>'; inherits: false; initial-value: #FFF176 } /* amarillo medio */
 @property --s-start-2 { syntax: '<percentage>'; inherits: false; initial-value: 8% }
 @property --s-end-2   { syntax: '<percentage>'; inherits: false; initial-value: 48% }
 
-@property --c-3 { syntax: '<color>'; inherits: false; initial-value: hsla(45,83%,28%,0.82) }
+@property --c-3 { syntax: '<color>'; inherits: false; initial-value: #FFB74D } /* naranja suave */
 @property --y-3 { syntax: '<percentage>'; inherits: false; initial-value: 67% }
 @property --x-3 { syntax: '<percentage>'; inherits: false; initial-value: 97% }
 @property --s-start-3 { syntax: '<percentage>'; inherits: false; initial-value: 8% }
 @property --s-end-3   { syntax: '<percentage>'; inherits: false; initial-value: 49% }
 
-@property --c-4 { syntax: '<color>'; inherits: false; initial-value: hsla(0,80%,52%,1) }
+@property --c-4 { syntax: '<color>'; inherits: false; initial-value: #FFE082 } /* amarillo cálido */
 @property --y-4 { syntax: '<percentage>'; inherits: false; initial-value: 77% }
 @property --x-4 { syntax: '<percentage>'; inherits: false; initial-value: 52% }
 @property --s-start-4 { syntax: '<percentage>'; inherits: false; initial-value: 18% }
 @property --s-end-4   { syntax: '<percentage>'; inherits: false; initial-value: 50% }
 
-@property --c-5 { syntax: '<color>'; inherits: false; initial-value: hsla(0,80%,52%,1) }
+@property --c-5 { syntax: '<color>'; inherits: false; initial-value: #FBC02D } /* naranja intenso */
 @property --y-5 { syntax: '<percentage>'; inherits: false; initial-value: 61% }
 @property --x-5 { syntax: '<percentage>'; inherits: false; initial-value: 88% }
 @property --s-start-5 { syntax: '<percentage>'; inherits: false; initial-value: 11% }
 @property --s-end-5   { syntax: '<percentage>'; inherits: false; initial-value: 41% }
 
-@property --c-6 { syntax: '<color>'; inherits: false; initial-value: hsla(0,100%,47%,1) }
+@property --c-6 { syntax: '<color>'; inherits: false; initial-value: #FFE082 } /* amarillo cálido */
 @property --y-6 { syntax: '<percentage>'; inherits: false; initial-value: 46% }
 @property --x-6 { syntax: '<percentage>'; inherits: false; initial-value: 8% }
 @property --s-start-6 { syntax: '<percentage>'; inherits: false; initial-value: 9% }
 @property --s-end-6   { syntax: '<percentage>'; inherits: false; initial-value: 36% }
 
-/* ================= KEYFRAMES ================= */
-@keyframes hero-gradient-animation {
-  0% {
-    --c-0: hsla(118.6, 100%, 82%, 1);
-    --y-0: 69%; --x-0: 91%;
-    --c-1: hsla(0, 80%, 52%, 1); --y-1: 20%; --x-1: 92%;
-    --c-2: hsla(118.7, 100%, 81%, 1); --y-2: 81%; --x-2: 2%;
-    --c-3: hsla(45, 83%, 28%, 0.82); --y-3: 67%; --x-3: 97%;
-    --c-4: hsla(0, 80%, 52%, 1); --y-4: 77%; --x-4: 52%;
-    --c-5: hsla(0, 80%, 52%, 1); --y-5: 61%; --x-5: 88%;
-    --c-6: hsla(0, 100%, 47%, 1); --y-6: 46%; --x-6: 8%;
-  }
-  50% {
-    --c-0: hsla(352.7, 98%, 41%, 1); --x-0: 16%;
-    --c-1: hsla(118, 100%, 30%, 1); --y-1: 12%; --x-1: 3%;
-    --c-2: hsla(0, 80%, 52%, 1); --y-2: 61%; --x-2: 73%;
-    --c-3: hsla(0, 80%, 52%, 1); --y-3: 76%; --x-3: 47%;
-    --c-4: hsla(111, 100%, 39%, 1); --y-4: 46%; --x-4: 18%;
-    --c-5: hsla(40, 100%, 30%, 1); --y-5: 102%; --x-5: 42%;
-    --c-6: hsla(45, 100%, 39%, 1); --y-6: 70%; --x-6: 33%;
-  }
-  100% {
-    --c-1: hsla(118, 100%, 30%, 1); --y-1: 4%; --x-1: 41%;
-    --c-2: hsla(124, 67%, 27%, 1); --y-2: 82%; --x-2: 98%;
-    --c-3: hsla(118.7, 100%, 81%, 1); --y-3: 48%; --x-3: 9%;
-    --c-6: hsla(44, 100%, 31%, 1); --y-6: 70%; --x-6: 93%;
-  }
-}
 
 /* ================= TU DASHBOARD ================= */
 .dashboard-body {
     margin: 0;
     padding: 0;
     font-family: 'Nunito', sans-serif;
-    color: #FFFFFF;
+    color: #000000;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 
     /* Fondo animado */
-    background-color: hsla(118, 100%, 30%, 1);
+    background-color: #FFF59D;
     background-image:
       radial-gradient(circle at var(--x-0) var(--y-0), var(--c-0) var(--s-start-0), transparent var(--s-end-0)),
       radial-gradient(circle at var(--x-1) var(--y-1), var(--c-1) var(--s-start-1), transparent var(--s-end-1)),
@@ -118,7 +170,7 @@
 .dashboard-button {
     display: inline-block;
     background-color: #ffdbb0;
-    color: #FFFFFF;
+    color: #000000;
     padding: 0.8rem 1.2rem;
     margin: 0.5rem;
     border-radius: 10px;
@@ -150,4 +202,11 @@
         display: block;
         margin: 0.7rem auto;
     }
+}
+
+.gif-cesta {
+  width: 55px;      /* tamaño más pequeño */
+  height: 55px;     /* mantiene proporción */
+  object-fit: contain;
+  margin: 0 auto 10px; /* igual que los otros iconos */
 }

@@ -3,21 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>ByeCal</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styleali.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='ByeCal.ico') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 <body>
+    <!-- Toastify JS -->
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <!-- Tu script -->
+  <script src="{{ url_for('static', filename='js/toast.js') }}"></script>
     
-    <div class="container"
-         style="max-width: 980px; margin: 40px auto; padding: 24px 28px; border-radius: 12px;">
+    <div class="container-alimentos">
 
         <h1 style="margin-top:0;">Buscar alimento</h1>
 
         <form method="POST" action="{{ url_for('alimentos') }}" style="margin-bottom: 14px;">
             <label for="nombre">Nombre del alimento:</label>
             <input type="text" id="nombre" name="nombre" required style="width:100%; max-width: 620px;">
-            <button type="submit"
+            <button type="submit" class="btn btn-red" style="margin-top:10px;"
                     style="display:block; margin-top:10px; padding:10px 20px; border:none; border-radius:8px; font-weight:600; cursor:pointer;">
                 Buscar
             </button>
@@ -47,7 +51,7 @@
 
         <h2 style="margin-top:24px;">Historial reciente</h2>
         <div style="overflow-x:auto;">
-            <table style="width:100%; border-collapse: collapse; min-width:700px;">
+            <table class="tabla-alimentos" style="width:100%; border-collapse: collapse; min-width:700px;">
                 <thead>
                     <tr>
                         <th>Nombre</th>
@@ -67,7 +71,7 @@
                         <td>{{ alimento.grasas }}</td>
                         <td>{{ alimento.carbohidratos }}</td>
                         <td>
-                            <button class="agregar-btn"
+                            <button class="btn btn-red agregar-btn"
                                     data-id="{{ alimento.id }}"
                                     data-nombre="{{ alimento.nombre }}"
                                     data-calorias="{{ alimento.calorias }}">
@@ -95,31 +99,32 @@
     </div>
 
     <script>
-    document.querySelectorAll(".agregar-btn").forEach(btn => {
-      btn.addEventListener("click", function (event) {
-        event.preventDefault(); // 🚀 evita redirección
+  document.querySelectorAll(".agregar-btn").forEach(btn => {
+    btn.addEventListener("click", function (event) {
+      event.preventDefault();
 
-        const alimentoId = this.dataset.id;
+      const alimentoId = this.dataset.id;
 
-        fetch("{{ url_for('agregar_consumo') }}", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: `alimento_id=${alimentoId}&porcion=100 g`
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            alert(`✔ ${data.consumo.nombre} agregado (${data.consumo.porcion})`);
-          } else {
-            alert(data.message || "Error al agregar alimento");
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          alert("Hubo un error con el servidor");
-        });
+      fetch("{{ url_for('agregar_consumo') }}", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `alimento_id=${alimentoId}&porcion=100 g`
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          // ✅ antes era alert(...)
+          toastOk(`🥗 ${data.consumo.nombre} agregado con éxito`);
+        } else {
+          toastErr(data.message || "Error al agregar alimento");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        toastErr("Hubo un error con el servidor");
       });
     });
-    </script>
+  });
+</script>
 </body>
 </html>

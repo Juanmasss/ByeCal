@@ -2,40 +2,59 @@
 :root {
   --btn-red: #e53935;
   --btn-red-hover: #c62828;
-  --btn-green: #28a745;
-  --btn-green-hover: #218838;
 }
 
 /* ================= FONDO ANIMADO ================= */
 @keyframes hero-gradient-animation {
   0% {
-    --c-0: hsla(118.6, 100%, 82%, 1);
+    --c-0: #FFF59D;      /* fondo amarillo */
     --y-0: 69%; --x-0: 91%;
-    --c-1: hsla(0, 80%, 52%, 1); --y-1: 20%; --x-1: 92%;
-    --c-2: hsla(118.7, 100%, 81%, 1); --y-2: 81%; --x-2: 2%;
-    --c-3: hsla(45, 83%, 28%, 0.82); --y-3: 67%; --x-3: 97%;
-    --c-4: hsla(0, 80%, 52%, 1); --y-4: 77%; --x-4: 52%;
-    --c-5: hsla(0, 80%, 52%, 1); --y-5: 61%; --x-5: 88%;
-    --c-6: hsla(0, 100%, 47%, 1); --y-6: 46%; --x-6: 8%;
+    --c-1: #FBC02D;      /* bolita naranja */
+    --y-1: 20%; --x-1: 92%;
+    --c-2: #FFF176;      /* amarillo medio */
+    --y-2: 81%; --x-2: 2%;
+    --c-3: #FFB74D;      /* naranja suave */
+    --y-3: 67%; --x-3: 97%;
+    --c-4: #FFE082;      /* amarillo cálido */
+    --y-4: 77%; --x-4: 52%;
+    --c-5: #FBC02D;      /* naranja más intenso */
+    --y-5: 61%; --x-5: 88%;
+    --c-6: #FFF59D;      /* fondo amarillo */
+    --y-6: 46%; --x-6: 8%;
   }
   50% {
-    --c-0: hsla(352.7, 98%, 41%, 1); --x-0: 16%;
-    --c-1: hsla(118, 100%, 30%, 1); --y-1: 12%; --x-1: 3%;
-    --c-2: hsla(0, 80%, 52%, 1); --y-2: 61%; --x-2: 73%;
-    --c-3: hsla(0, 80%, 52%, 1); --y-3: 76%; --x-3: 47%;
-    --c-4: hsla(111, 100%, 39%, 1); --y-4: 46%; --x-4: 18%;
-    --c-5: hsla(40, 100%, 30%, 1); --y-5: 102%; --x-5: 42%;
-    --c-6: hsla(45, 100%, 39%, 1); --y-6: 70%; --x-6: 33%;
+    --c-0: #FFF176; 
+    --x-0: 16%;
+    --c-1: #FFB74D;
+    --y-1: 12%; --x-1: 3%;
+    --c-2: #FFE082; 
+    --y-2: 61%; --x-2: 73%;
+    --c-3: #FBC02D; 
+    --y-3: 76%; --x-3: 47%;
+    --c-4: #FFF59D; 
+    --y-4: 46%; --x-4: 18%;
+    --c-5: #FFB74D; 
+    --y-5: 102%; --x-5: 42%;
+    --c-6: #FFE082; 
+    --y-6: 70%; --x-6: 33%;
   }
   100% {
-    --c-1: hsla(118, 100%, 30%, 1); --y-1: 4%; --x-1: 41%;
-    --c-2: hsla(124, 67%, 27%, 1); --y-2: 82%; --x-2: 98%;
-    --c-3: hsla(118.7, 100%, 81%, 1); --y-3: 48%; --x-3: 9%;
-    --c-6: hsla(44, 100%, 31%, 1); --y-6: 70%; --x-6: 93%;
+    --c-0: #FFF59D;
+    --c-1: #FFB74D;
+    --c-2: #FFF176;
+    --c-3: #FFE082;
+    --c-4: #FFE082;
+    --c-5: #FBC02D;
+    --c-6: #FBC02D;
+
+    --y-1: 4%; --x-1: 41%;
+    --y-2: 82%; --x-2: 98%;
+    --y-3: 48%; --x-3: 9%;
+    --y-6: 70%; --x-6: 93%;
   }
 }
 
-@property --c-0 { syntax: '<color>'; inherits: false; initial-value: hsla(118,100%,82%,1) }
+@property --c-0 { syntax: '<color>'; inherits: false; initial-value: #FFF59D } /* amarillo base */
 @property --y-0 { syntax: '<percentage>'; inherits: false; initial-value: 69% }
 @property --x-0 { syntax: '<percentage>'; inherits: false; initial-value: 91% }
 @property --s-start-0 { syntax: '<percentage>'; inherits: false; initial-value: 8% }
@@ -43,35 +62,35 @@
 
 @property --y-1 { syntax: '<percentage>'; inherits: false; initial-value: 20% }
 @property --x-1 { syntax: '<percentage>'; inherits: false; initial-value: 92% }
-@property --c-1 { syntax: '<color>'; inherits: false; initial-value: hsla(0,80%,52%,1) }
+@property --c-1 { syntax: '<color>'; inherits: false; initial-value: #FBC02D } /* naranja */
 @property --s-start-1 { syntax: '<percentage>'; inherits: false; initial-value: 1% }
 @property --s-end-1   { syntax: '<percentage>'; inherits: false; initial-value: 49% }
 
 @property --y-2 { syntax: '<percentage>'; inherits: false; initial-value: 81% }
 @property --x-2 { syntax: '<percentage>'; inherits: false; initial-value: 2% }
-@property --c-2 { syntax: '<color>'; inherits: false; initial-value: hsla(118,100%,81%,1) }
+@property --c-2 { syntax: '<color>'; inherits: false; initial-value: #FFF176 } /* amarillo medio */
 @property --s-start-2 { syntax: '<percentage>'; inherits: false; initial-value: 8% }
 @property --s-end-2   { syntax: '<percentage>'; inherits: false; initial-value: 48% }
 
-@property --c-3 { syntax: '<color>'; inherits: false; initial-value: hsla(45,83%,28%,0.82) }
+@property --c-3 { syntax: '<color>'; inherits: false; initial-value: #FFB74D } /* naranja suave */
 @property --y-3 { syntax: '<percentage>'; inherits: false; initial-value: 67% }
 @property --x-3 { syntax: '<percentage>'; inherits: false; initial-value: 97% }
 @property --s-start-3 { syntax: '<percentage>'; inherits: false; initial-value: 8% }
 @property --s-end-3   { syntax: '<percentage>'; inherits: false; initial-value: 49% }
 
-@property --c-4 { syntax: '<color>'; inherits: false; initial-value: hsla(0,80%,52%,1) }
+@property --c-4 { syntax: '<color>'; inherits: false; initial-value: #FFE082 } /* amarillo cálido */
 @property --y-4 { syntax: '<percentage>'; inherits: false; initial-value: 77% }
 @property --x-4 { syntax: '<percentage>'; inherits: false; initial-value: 52% }
 @property --s-start-4 { syntax: '<percentage>'; inherits: false; initial-value: 18% }
 @property --s-end-4   { syntax: '<percentage>'; inherits: false; initial-value: 50% }
 
-@property --c-5 { syntax: '<color>'; inherits: false; initial-value: hsla(0,80%,52%,1) }
+@property --c-5 { syntax: '<color>'; inherits: false; initial-value: #FBC02D } /* naranja intenso */
 @property --y-5 { syntax: '<percentage>'; inherits: false; initial-value: 61% }
 @property --x-5 { syntax: '<percentage>'; inherits: false; initial-value: 88% }
 @property --s-start-5 { syntax: '<percentage>'; inherits: false; initial-value: 11% }
 @property --s-end-5   { syntax: '<percentage>'; inherits: false; initial-value: 41% }
 
-@property --c-6 { syntax: '<color>'; inherits: false; initial-value: hsla(0,100%,47%,1) }
+@property --c-6 { syntax: '<color>'; inherits: false; initial-value: #FFE082 } /* amarillo cálido */
 @property --y-6 { syntax: '<percentage>'; inherits: false; initial-value: 46% }
 @property --x-6 { syntax: '<percentage>'; inherits: false; initial-value: 8% }
 @property --s-start-6 { syntax: '<percentage>'; inherits: false; initial-value: 9% }
@@ -87,7 +106,7 @@ body {
   justify-content: center;
   align-items: center;
 
-  background-color: hsla(118, 100%, 30%, 1);
+  background-color: #FFF59D;
   background-image:
     radial-gradient(circle at var(--x-0) var(--y-0), var(--c-0) var(--s-start-0), transparent var(--s-end-0)),
     radial-gradient(circle at var(--x-1) var(--y-1), var(--c-1) var(--s-start-1), transparent var(--s-end-1)),
@@ -203,3 +222,306 @@ body {
   height: auto;
   margin-bottom: 15px;
 }
+
+/* ================= Alimentos ===================================================================================== */
+/* ================= CONTENEDOR ALIMENTOS ================= */
+.container-alimentos {
+  max-width: 980px;
+  margin: 40px auto;
+  padding: 28px;
+  border-radius: 18px;
+  background: #FAF0D1;                 /* igual al look del login */
+  box-shadow: 0px 8px 20px rgba(0,0,0,0.25);
+  color: #222;
+}
+
+/* Títulos dentro del contenedor de alimentos */
+.container-alimentos h1,
+.container-alimentos h2 {
+  margin: 0 0 18px 0;
+  font-weight: 700;
+}
+
+/* Labels y campos del formulario de alimentos */
+.container-alimentos label {
+  display: block;
+  margin: 12px 0 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.container-alimentos input,
+.container-alimentos select,
+.container-alimentos textarea {
+  width: 100%;
+  padding: 12px;
+  border: 3px solid #FFD5A3;
+  border-radius: 10px;
+  background: #f9f9f9;
+  font-size: 15px;
+  box-sizing: border-box;
+  transition: 0.25s ease;
+}
+
+.container-alimentos input:focus,
+.container-alimentos select:focus,
+.container-alimentos textarea:focus {
+  outline: 2px solid var(--btn-red);
+  box-shadow: 0 0 6px rgba(0,0,0,0.15);
+}
+
+/* Botón rojo reutilizable para alimentos */
+.btn { 
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .25s, transform .15s;
+  display: inline-block;
+}
+
+.btn-red { 
+  background: var(--btn-red);
+  color: #fff;
+}
+.btn-red:hover { background: var(--btn-red-hover); transform: translateY(-1px); }
+
+/* Links en el contenedor de alimentos */
+.container-alimentos .link {
+  color: var(--btn-red);
+  font-weight: 600;
+  text-decoration: none;
+}
+.container-alimentos .link:hover { text-decoration: underline; }
+
+/* Tabla de alimentos */
+.tabla-alimentos {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+  margin-top: 8px;
+}
+.tabla-alimentos th, 
+.tabla-alimentos td {
+  border: 1px solid #e6e6e6;
+  padding: 10px;
+  text-align: center;
+}
+.tabla-alimentos th {
+  background: #fafafa;
+  font-weight: 700;
+}
+
+/* ================= Alimentos ===================================================================================== */
+.btn{
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .25s, transform .15s, opacity .2s, color .2s, border-color .2s;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+}
+
+/* lleno */
+.btn-red{
+  background: var(--btn-red);
+  color: #fff;
+}
+.btn-red:hover{ background: var(--btn-red-hover); transform: translateY(-1px); }
+
+/* contorno */
+.btn-outline-red{
+  background: transparent;
+  color: var(--btn-red);
+  border: 2px solid var(--btn-red);
+}
+.btn-outline-red:hover{
+  color: #fff;
+  background: var(--btn-red);
+  border-color: var(--btn-red-hover);
+}
+
+/* enlace rojo */
+.link-red{
+  color: var(--btn-red);
+  font-weight: 700;
+  text-decoration: none;
+}
+.link-red:hover{ text-decoration: underline; }
+
+/* ========= Tarjetas y contenedor crema (como login) ========= */
+.card{
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+  padding:16px;
+}
+
+.alimentos-consumidos.container,
+.container-alimentos{
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 28px;
+  border-radius: 18px;
+  background: #FAF0D1;  /* mismo look del login */
+  box-shadow: 0px 8px 20px rgba(0,0,0,0.25);
+  color: #222;
+}
+
+/* tablas */
+.tabla-consumos,
+.tabla-alimentos{
+  width:100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+.tabla-consumos th, .tabla-consumos td,
+.tabla-alimentos th, .tabla-alimentos td{
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  padding: 10px;
+  text-align: center;
+}
+.tabla-consumos th, .tabla-alimentos th{
+  background:rgba(255, 255, 255, 0.35);
+  font-weight:700;
+}
+
+/* links del login en rojo también */
+.login-container a{
+  color: var(--btn-red);
+}
+.login-container a:hover{
+  text-decoration: underline;
+}
+
+/* Contenedor de la tabla con esquinas redondeadas */
+.alimentos-consumidos .table-responsive {
+  border-radius: 16px;          /* mismo redondeo que el container */
+  overflow: hidden;             /* recorta lo que se salga, incluyendo bordes rectos */
+  border: 1px solid rgba(0,0,0,0.25); /* para mantener un borde exterior coherente */
+}
+
+/* Ajuste de la tabla interna */
+.alimentos-consumidos .tabla-consumos {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 760px;
+}
+
+.alimentos-consumidos .tabla-consumos th,
+.alimentos-consumidos .tabla-consumos td {
+  border: 1px solid rgba(0,0,0,0.35);
+  padding: 10px;
+  text-align: center;
+}
+
+.alimentos-consumidos .tabla-consumos thead th {
+  background: rgba(255, 255, 255, 0.35);
+  font-weight: 700;
+}
+.calorias-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
+
+.circle-progress {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.circle-progress svg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+
+.circle-progress .bg {
+  fill: none;
+  stroke: rgba(255, 193, 7, 0.3);
+  stroke-width: 12;
+}
+
+.circle-progress .progress {
+  fill: none;
+  stroke: #FFC107;
+  stroke-width: 12;
+  stroke-linecap: round;
+  stroke-dasharray: 339.292; /* 2πr con r=54 */
+  stroke-dashoffset: 339.292;
+  transition: stroke-dashoffset 0.4s ease;
+}
+
+.circle-progress text {
+  transform: rotate(90deg);
+  transform-origin: center;
+  font-weight: 700;
+}
+
+/* ====== Calorías: card compacto, centrado y color crema ====== */
+/* Calorías con el tono clarito de los encabezados */
+.alimentos-consumidos .calorias-box{
+  max-width: 720px;
+  margin: 0 auto 16px;
+  padding: 16px 22px;
+
+  background: rgba(255, 255, 255, 0.35); /* igual al de los títulos */
+  border: 1px solid #E6D6AC;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  text-align: left; /* o center si prefieres todo centrado */
+}
+
+/* texto a la izquierda pero centrado en móvil */
+.alimentos-consumidos .calorias-box .info{
+  min-width: 260px;              /* evita que salte raro cuando el título ocupa dos líneas */
+}
+.alimentos-consumidos .calorias-box .info h2{
+  margin: 0 0 6px;
+}
+
+/* círculo un poco más pequeño para que “quepa justo” */
+.alimentos-consumidos .calorias-box .circle-progress{
+  width: 104px;                  /* antes 120px */
+  height: 104px;
+  flex-shrink: 0;
+}
+
+/* Centrar título con gif */
+.page-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.titulo-con-gif {
+  display: flex;
+  justify-content: center; /* centra en horizontal */
+  align-items: center;     /* centra vertical */
+  gap: 14px;               /* espacio entre el título y el gif */
+}
+
+.titulo-con-gif h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.gif-cesta {
+  width: 50px;   /* ajusta el tamaño */
+  height: auto;
+}
+

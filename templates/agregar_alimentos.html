@@ -10,20 +10,34 @@
 </head>
 <body>
   <div class="container alimentos-consumidos" style="max-width: 1100px; margin: 40px auto; font-family: 'Nunito', sans-serif;">
-    <header class="page-header" style="margin-bottom: 16px;">
-      <h1 style="margin: 0 0 6px;">Alimentos consumidos</h1>
-      <p class="subtitle" style="margin: 0; opacity: .8;">Aquí verás los alimentos que registres durante el día.</p>
-    </header>
+    <header class="page-header">
+  <div class="titulo-con-gif">
+    <h1>Alimentos consumidos</h1>
+    <img src="{{ url_for('static', filename='cesta-de-la-compra.gif') }}" 
+         alt="Cesta de la compra" class="gif-cesta">
+  </div>
+  <p class="subtitle">Aquí verás los alimentos que registres durante el día.</p>
+</header>
 
     <!-- 🔥 Bloque de calorías -->
-    <div class="card" style="background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.08); padding: 16px; margin-bottom:16px;">
-      <h2 style="margin-top:0;">Calorías</h2>
-      <p><strong>Recomendadas:</strong> {{ calorias_recomendadas }} kcal</p>
-      <p><strong>Consumidas:</strong> <span id="consumidas">{{ calorias_consumidas }}</span> kcal</p>
-    </div>
+    <div class="card calorias-box">
+  <div class="info">
+    <h2 style="margin-top:0;">Calorías</h2>
+    <p><strong>Recomendadas:</strong> {{ calorias_recomendadas }} kcal</p>
+    <p><strong>Consumidas:</strong> <span id="consumidas">{{ calorias_consumidas|round(0)|int }}</span> kcal</p>
+  </div>
+
+  <div class="circle-progress">
+    <svg viewBox="0 0 120 120">
+      <circle class="bg" cx="60" cy="60" r="54" />
+      <circle class="progress" cx="60" cy="60" r="54" />
+      <text id="progress-text" x="60" y="65" text-anchor="middle" font-size="16" fill="#444">0%</text>
+    </svg>
+  </div>
+</div>
 
     <!-- 🔥 Tabla de alimentos consumidos -->
-    <div class="card" style="background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.08); padding: 16px;">
+    <div class="card card-tabla" style="background:rgba(255, 255, 255, 0.35); border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.08); padding: 16px;">
       <div class="table-responsive" style="overflow-x:auto;">
         <table class="tabla-consumos" style="width:100%; border-collapse:collapse; min-width:760px;">
           <thead>
@@ -73,17 +87,42 @@
     </div>
 
     <!-- 🔥 Botones de navegación -->
-    <div style="margin-top: 24px; text-align:center;">
-      <a href="{{ url_for('alimentos') }}" 
-         style="display:inline-block; margin:8px; padding:10px 18px; background:#2196F3; color:#fff; text-decoration:none; border-radius:8px;">
-         ⬅ Volver a alimentos
-      </a>
-      <a href="{{ url_for('dashboard') }}" 
-         style="display:inline-block; margin:8px; padding:10px 18px; background:#4CAF50; color:#fff; text-decoration:none; border-radius:8px;">
-         🏠 Volver al inicio
-      </a>
-    </div>
+<div class="acciones-nav" style="margin-top: 24px; text-align:center;">
+  <a href="{{ url_for('alimentos') }}"  class="btn btn-red" style="margin:8px; border-radius:8px;">
+    ⬅ Volver a alimentos
+  </a>
+  <a href="{{ url_for('dashboard') }}" class="btn btn-red" style="margin:8px; border-radius:8px;">
+    🏠 Volver al inicio
+  </a>
+</div>
+      </div>
+<script>
+  const meta = Number('{{ calorias_recomendadas|default(0) }}') || 0;
+  const consumidasInicial = Number('{{ calorias_consumidas|default(0) }}') || 0;
 
-  </div>
+  const circle = document.querySelector('.circle-progress .progress');
+  const text = document.getElementById('progress-text');
+
+  if (circle && text && meta > 0) {
+    const r = 54;
+    const circumference = 2 * Math.PI * r;
+    circle.style.strokeDasharray = String(circumference);
+    circle.style.strokeDashoffset = String(circumference);
+
+    function setProgress(valor) {
+      const porcentaje = Math.max(0, Math.min((valor / meta) * 100, 100));
+      const offset = circumference - (porcentaje / 100) * circumference;
+      circle.style.strokeDashoffset = String(offset);
+      text.textContent = `${Math.round(porcentaje)}%`;
+    }
+
+    setProgress(consumidasInicial);
+  } else {
+    const textEl = document.getElementById('progress-text');
+    if (textEl) textEl.textContent = '0%';
+  }
+</script>
+
+
 </body>
 </html>
